@@ -1,2 +1,3 @@
 # content-management-tools
-Created with CodeSandbox
+
+A set of tools to help in the management of content
