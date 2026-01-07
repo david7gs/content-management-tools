@@ -1,0 +1,157 @@
+body {
+  background-color: #e3e3e3;
+}
+
+ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-inline-start: 0;
+  a {
+    padding: 7px 15px;
+    text-decoration: none;
+    color: black;
+    background-color: #fff;
+    border-radius: 15px;
+    border: solid 1px #c1c2c7;
+    &:hover {
+      background-color: #f5f5f5;
+    }
+    &.visited {
+      background: #aeaeb1;
+    }
+  }
+  li.button {
+    padding: 5px 0;
+    font-size: 0.85rem;
+  }
+}
+
+.App {
+  font-family: sans-serif;
+  .error {
+    color: red;
+  }
+}
+
+button {
+  border-radius: 6px;
+  border: solid 1px;
+  padding: 5px;
+  background-color: #fff;
+  cursor: pointer;
+  &:hover {
+    background-color: #f5f5f5;
+  }
+  &.active {
+    color: #fff;
+    background-color: #424242;
+  }
+  &.full-width {
+    width: 100%;
+  }
+}
+
+.page-wrap {
+  width: 600px;
+  margin: 0 auto;
+  .function-selector {
+    display: flex;
+    gap: 2rem;
+  }
+  .locale-list {
+    margin: 2rem 0 1rem 0;
+    .seperator {
+      margin: 1rem 0;
+    }
+  }
+}
+
+.input-wrap,
+.compare-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 500px;
+  /* margin: 0 auto; */
+  .input-col {
+    label {
+      text-align: left;
+      .seperator-button {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+      }
+    }
+    textarea {
+      width: 100%;
+    }
+  }
+}
+.seperator-button {
+  display: flex;
+  flex-direction: row;
+  gap: 0.75rem;
+}
+.compare-wrap {
+  gap: 1rem;
+  size: 1.5rem;
+  margin-top: 1rem;
+  .compare-wrap__label {
+    margin-bottom: 0;
+  }
+  .compare-wrap__row {
+    font-size: 0.75rem;
+    width: 75px;
+    padding-bottom: 0.75rem;
+    border: solid 1px #000;
+    padding: 7px 15px;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+.compare-wrap__label {
+  size: 1.5rem;
+  margin: 1rem 0;
+  font-weight: 600;
+}
+.compare-button {
+  margin-top: 1rem;
+}
+
+.selector-type {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+/* animations */
+
+.slide-in {
+  animation: fade-slide-in-from-left 0.3s ease-in;
+}
+
+@keyframes slide-in-from-left {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    transform: translateX(-100%); /* Start off-screen to the left */
+  }
+  100% {
+    transform: translateX(0); /* End at its natural position */
+    opacity: 1;
+  }
+}
+
+@keyframes fade-slide-in-from-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-2rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
