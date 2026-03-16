@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { McToolsContext } from "../store/mcTools_context.jsx";
 import Input_test from "./Input_test";
 
 export default function LocaleGenerator() {
+  const { handleToolTipClick } = useContext(McToolsContext);
   const [data, setData] = useState({
     firstInput: "",
     firstInputArr: [],
@@ -152,6 +154,18 @@ export default function LocaleGenerator() {
     <>
       <div className="locale-list slide-in">
         <div className="description">
+          <h4>Locale List Generator</h4>
+          <p>
+            Quickly generate a list of locales in scope for a given content
+            update or variation.{" "}
+            <button
+              className="tool-tip"
+              title="See examples of content that can be entered in this tool"
+              onClick={() => handleToolTipClick("LOCALE_LIST_GENERATOR")}
+            >
+              ?
+            </button>
+          </p>
           <p>
             In this first field, input a string of locales copied from source
             such as a content matrix in the first field.

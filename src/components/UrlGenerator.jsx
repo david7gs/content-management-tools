@@ -141,7 +141,12 @@ export default function UrlGenerator() {
                   : "url-link";
                 return (
                   <li className="button" key={i} onClick={() => setVisited(i)}>
-                    <a className={classes} href={url} target="_blank">
+                    <a
+                      className={classes}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       {url}
                     </a>
                   </li>

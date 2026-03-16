@@ -14,12 +14,20 @@ export const Content = [
     },
   },
   {
-    type: "SECOND",
-    desc: "Compare two lists of locales and find the differences and similarities between them.",
-    view: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    data: {
-      firstString: "",
-      secondString: "",
+    type: "LOCALE_LIST_GENERATOR",
+    desc: [
+      "This tool extracts a list of in-scope locales from a content matrix, which is typically shared as a spreadsheet. The matrix should include a column of locales and one or more content flag columns indicating whether each locale should receive the content associated with that column.",
+      "How to use this tool:",
+      "Copy the column containing the locales (for example: en_US, en_CA, es_MX, etc.) and paste it into the Locales input field.",
+      "Copy the content flag column corresponding to the content update you want to evaluate and paste it into the Content Flags input field.",
+      "Click Generate List to produce the list of locales that are in scope for the selected content.",
+      "As you paste your data, a counter will appear for each input field showing the number of locales and content flags detected. When the counts match, the tool will generate the list of applicable locales.",
+      "For additional verification, the tool also returns a complete reference list of all locales alongside their corresponding content flags. This allows you to quickly review the data and confirm accuracy before using the results.",
+    ],
+    example: {
+      firstString:
+        "en_CA, es_CL, es_MX, fr_CA, pt_BR, en_AU, en_NZ, ar_AE, cs_CZ, en_AE, it_IT",
+      secondString: "*•*	*•*	*•*	*•* 	*•*		*•*	*•*		*•*",
     },
   },
   {

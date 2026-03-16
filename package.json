@@ -1,6 +1,8 @@
 {
   "name": "cm-tools",
+  "author": "David Garcia-Shelton",
   "private": true,
+  "homepage": ".",
   "version": "0.0.4",
   "type": "module",
   "scripts": {
