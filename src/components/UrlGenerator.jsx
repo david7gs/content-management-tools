@@ -1,8 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
+import { McToolsContext } from "../store/mcTools_context.jsx";
 import Input_test from "./Input_test";
 import { LocaleList, CountryList } from "../helpers/localeMaping.js";
 
 export default function UrlGenerator() {
+  const { urlGen, handleSetUrlGen, handleToolTipClick } =
+    useContext(McToolsContext);
   const [data, setData] = useState({
     url: "",
     input: "",
@@ -13,6 +16,8 @@ export default function UrlGenerator() {
     showUrlList: false,
     isVisited: [],
   });
+
+  console.log(`urlGen = ${urlGen.test}`);
 
   const eStart = useRef(null);
 

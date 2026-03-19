@@ -1,11 +1,11 @@
 import { useState, useContext, useRef } from "react";
-
 import { default as Input } from "./InputRef";
 import { LocaleList, CountryCodes } from "../helpers/localeMaping.js";
 import { McToolsContext } from "../store/mcTools_context.jsx";
 
 export default function CountryCode() {
-  const { handleToolTipClick } = useContext(McToolsContext);
+  const { countryCode, handleSetCountryCode, handleToolTipClick } =
+    useContext(McToolsContext);
   const [returnValue, setReturnValue] = useState({
     value: undefined,
     isValid: undefined,
@@ -19,6 +19,9 @@ export default function CountryCode() {
   const Countries = [...CountryCodes].map((country) => {
     return country.toLocaleLowerCase();
   });
+
+  console.log(`countryCode = ${countryCode.test}`);
+
   var exp = new RegExp(/^[a-zA-Z0-9_-]+$/);
   function handleClick() {
     const value = inputRef.current.value;

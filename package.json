@@ -1,9 +1,10 @@
 {
   "name": "cm-tools",
   "author": "David Garcia-Shelton",
+  "description": "Content Management Resources is a set of tools designed to increase the productivity and accuracy of content managers by reducing the amount of manual effort spent identifying and comparing in-scope locales for content update requests as well as reduce the likelihood of errors inherent in manual identification and comparison of locale lists quickly and accurately.",
+  "license": "UNLICENSED",
   "private": true,
-  "homepage": ".",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "scripts": {
     "dev": "vite",
