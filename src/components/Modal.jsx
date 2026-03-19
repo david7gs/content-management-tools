@@ -22,11 +22,15 @@ export default function Modal({ children }) {
           <div className="example">
             <h4>Example:</h4>
             <p>
-              <span className="example__label">First String: </span>
+              {data?.isExample && (
+                <span className="example__label">First String: </span>
+              )}
               {data.example.firstString}
             </p>
             <p>
-              <span className="example__label">Second String: </span>
+              {data?.isExample && (
+                <span className="example__label">Second String: </span>
+              )}
               {data.example.secondString}
             </p>
           </div>

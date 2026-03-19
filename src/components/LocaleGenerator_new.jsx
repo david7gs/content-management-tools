@@ -1,7 +1,9 @@
 import { useState, useContext } from "react";
+import { McToolsContext } from "../store/mcTools_context.jsx";
 import Input_test from "./Input_test";
 
 export default function LocaleGenerator() {
+  const { handleToolTipClick } = useContext(McToolsContext);
   const [data, setData] = useState({
     firstInput: "",
     firstInputArr: [],
@@ -18,22 +20,9 @@ export default function LocaleGenerator() {
     isDisable: false,
   });
 
-  function handlePaste(e) {
-    e.preventDefault();
-    const pastedData = e.clipboardData;
-    // const pastedData = e.clipboardData?.getData("text");
-    console.log(`handlePaste firing with pastedData =`, pastedData);
-    // function handleInput(e) {
-    console.log(`in LocalGenerator with value =`, e.target.value);
+  function handleInput(e) {
     const value = e.target.value;
     const name = e.target.name;
-    console.log(`value =`, value);
-
-    console.log(`value trimmed`, value.replace(/\n*$/, ""));
-    // const newArr = value === 0 ? value
-    //   .replace(/\t/g, ",")
-    //   .replace(/\n+/g, ",")
-    //   .split(",");
     const newArr =
       name === "firstInput"
         ? value
@@ -47,19 +36,7 @@ export default function LocaleGenerator() {
             .replace(/\n$/, "")
             .replace(/(\r\n|\n|\r)/g, ",")
             .split(",");
-    // : value.replace(/\n*$/, ",").replace(/\n/g, ",").split(",");
     const newValue = newArr.join(", ");
-
-    // let NewArr = [];
-    // let NewValue = "";
-
-    // if (value === "") {
-    //   NewArr = [...value.replace(/\t/g, ",").replace(/\n+/g, ",").split(",")];
-    //   console.log(`^^ 1 newValue =`, newValue);
-    // } else {
-    //   let x = value.replace(/\s+/g, "").split(",");
-    //   console.log(`^^ 2 value =`, x);
-    // }
 
     setData((prevState) => {
       return {
@@ -68,17 +45,13 @@ export default function LocaleGenerator() {
         [name]: value,
         [name + `Arr`]: [...newArr],
         [name + `Value`]: newValue,
-        // [name + `Arr_t`]: [...NewArr],
-        // [name + `Value_t`]: NewValue,
         [name + `ArrCount`]: newArr.length,
       };
     });
   }
 
   function getLocaleList() {
-    console.log(`getLocaleList firing`);
     if (data.firstInputArrCount === 0 || data.secondInputArrCount === 0) {
-      console.log(`Inputs are empty`);
       setData((prevState) => {
         return {
           ...prevState,
@@ -88,7 +61,6 @@ export default function LocaleGenerator() {
         };
       });
     } else if (data.firstInputArrCount === data.secondInputArrCount) {
-      console.log(`inputs are equal`);
       const indexArr = [];
       data.secondInputArr.map((ind, i) => {
         if (ind === "") {
@@ -98,8 +70,6 @@ export default function LocaleGenerator() {
       const localeArray = data.firstInputArr.filter((value, index) => {
         return !indexArr.includes(index);
       });
-      console.log(`indexArr =`, indexArr);
-      console.log(`localeArray =`, localeArray);
       setData((prevState) => {
         return {
           ...prevState,
@@ -145,20 +115,12 @@ export default function LocaleGenerator() {
 
   function handleClick(e) {
     const target = e.target.name;
-    console.log(`handleclick firing with e =`, target);
     setData((prevState) => {
       return {
         ...prevState,
         //[target + `InputValue`]: 0,
       };
     });
-  }
-
-  function handleInput(e) {
-    // function handlePaste() {
-    console.log(`handleInput firing`);
-    const value = e.target.value;
-    console.log(`value =`, value);
   }
 
   const results = data.isEmpty ? (
@@ -188,32 +150,31 @@ export default function LocaleGenerator() {
     </div>
   );
 
-  function handleSourceSelect(e) {
-    console.log(`handleSourceSelect & name =`, e.target.name);
-  }
-
   return (
     <>
       <div className="locale-list slide-in">
         <div className="description">
+          <h4>Locale List Generator</h4>
+          <p>
+            Quickly generate a list of locales in scope for a given content
+            update or variation.
+            <button
+              className="tool-tip"
+              title="See examples of content that can be entered in this tool"
+              onClick={() => handleToolTipClick("LOCALE_LIST_GENERATOR")}
+            >
+              ?
+            </button>
+          </p>
           <p>
             In this first field, input a string of locales copied from source
             such as a content matrix in the first field.
           </p>
         </div>
-        <div className="seperator">
-          <p>Please indicate the originating document type</p>
-          <button onClick={handleSourceSelect} name="quip">
-            Quip
-          </button>
-          <button onClick={handleSourceSelect} name="else">
-            Everything else
-          </button>
-        </div>
         <div className="input-wrap">
           <div className="input-col">
             <label htmlFor="firstInput">
-              Locales&nbsp;
+              Number of locales&nbsp;
               {data.hasOwnProperty("firstInputArrCount") &&
                 data.firstInputArrCount != 0 && (
                   <span className="locale-count">
@@ -227,9 +188,9 @@ export default function LocaleGenerator() {
               id="firstInput"
               disable={data.isDisable && "disabled"}
               handleOnChange={handleInput}
-              // handleClick={handleClick}
-              handlePaste={handlePaste}
+              handleClick={handleClick}
               value={data.firstInputValue}
+              placeholder="ex: en_AU, en_CA, fr_CA, es_CL, de_DE"
               rows="4"
               cols="50"
             />
@@ -243,7 +204,7 @@ export default function LocaleGenerator() {
               </p>
             </div>
             <label htmlFor="secondInput">
-              Indicator cells&nbsp;
+              Number of cells&nbsp;
               {data.hasOwnProperty("secondInputArrCount") &&
                 data.secondInputArrCount != 0 && (
                   <span className="locale-count">
@@ -260,18 +221,12 @@ export default function LocaleGenerator() {
               handleClick={handleClick}
               disable={data.isDisable && "disabled"}
               value={data.secondInput}
+              placeholder="ex: usually cells copied from a spreadsheet with something indicating yes/no"
               rows="4"
               cols="50"
             />
             <div className="seperator-button">
               <button onClick={handleReset}>Reset input fileds</button>
-              {/* <button
-                onClick={() =>
-                  handleSelectors({ type: "comma", target: "contentScope" })
-                }
-              >
-                Comma
-              </button> */}
             </div>
           </div>
         </div>

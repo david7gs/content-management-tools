@@ -88,10 +88,6 @@ export default function LocaleList() {
     });
   }
 
-  function handleClick(type) {
-    handleToolTipClick(type);
-  }
-
   return (
     <>
       <div className="locale-list slide-in">
@@ -112,7 +108,7 @@ export default function LocaleList() {
             <button
               className="tool-tip"
               title="See examples of content that can be entered in this tool"
-              onClick={() => handleClick("COMPARE_LOCALE")}
+              onClick={() => handleToolTipClick("COMPARE_LOCALE")}
             >
               ?
             </button>

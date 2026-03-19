@@ -103,7 +103,7 @@ export default function UrlGenerator() {
             type="textarea"
             name="url"
             id="url"
-            rows="3"
+            rows="2"
             cols="50"
             handleOnChange={handleUrl}
           />

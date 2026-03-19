@@ -43,7 +43,7 @@ export default function Input({
     );
   return (
     <div className="input-field">
-      <label className="compare-wrap__label" htmlFor="localString">
+      <label className="compare-wrap__label" htmlFor={name}>
         {label}
       </label>
       {inputField}

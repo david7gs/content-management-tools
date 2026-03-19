@@ -1,10 +1,11 @@
 import { useState, useContext, useRef } from "react";
-import MasterContext from "../store/master_context";
+
 import { default as Input } from "./InputRef";
 import { LocaleList, CountryCodes } from "../helpers/localeMaping.js";
+import { McToolsContext } from "../store/mcTools_context.jsx";
 
 export default function CountryCode() {
-  //   const {} = useContext(MasterContext);
+  const { handleToolTipClick } = useContext(McToolsContext);
   const [returnValue, setReturnValue] = useState({
     value: undefined,
     isValid: undefined,
@@ -112,10 +113,15 @@ export default function CountryCode() {
     <>
       <div className="locale-list slide-in">
         <div className="description">
-          <p>
-            Enter a country code (ex. "us") to get a locale ("en_US") or a
-            locale (ex. "en_US") to get a country code ("us").
-          </p>
+          Enter a country code (ex. "us") to get a locale ("en_US") or a locale
+          (ex. "en_US") to get a country code ("us").
+          <button
+            className="tool-tip"
+            title="See examples of content that can be entered in this tool"
+            onClick={() => handleToolTipClick("COUNTRY_CODE")}
+          >
+            ?
+          </button>
         </div>
         <div className="seperator"></div>
         <div className="input-wrap">
