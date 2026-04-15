@@ -17,7 +17,7 @@ export default function UrlGenerator() {
     isVisited: [],
   });
 
-  console.log(`urlGen = ${urlGen.test}`);
+  // console.log(`urlGen = ${urlGen.test}`);
 
   const eStart = useRef(null);
 

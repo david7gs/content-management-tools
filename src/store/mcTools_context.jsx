@@ -66,7 +66,7 @@ export default function McToolsContextProvider({ children }) {
 
   function handleSetCompareLocales(obj) {
     const data = obj ?? undefined;
-    console.log(`In Context handleSetCompareLocales & data =`, data);
+    // console.log(`In Context handleSetCompareLocales & data =`, data);
     setMasterTools((prevState) => {
       return {
         ...prevState,
@@ -80,7 +80,7 @@ export default function McToolsContextProvider({ children }) {
 
   function handleSetLocaleList(obj) {
     const data = obj ?? undefined;
-    console.log(`In Context handleSetLocaleList & data =`, data);
+    // console.log(`In Context handleSetLocaleList & data =`, data);
     setMasterTools((prevState) => {
       return {
         ...prevState,
@@ -90,7 +90,7 @@ export default function McToolsContextProvider({ children }) {
 
   function handleSetCountryCode(obj) {
     const data = obj ?? undefined;
-    console.log(`In Context handleSetCountryCode & data =`, data);
+    // console.log(`In Context handleSetCountryCode & data =`, data);
     setMasterTools((prevState) => {
       return {
         ...prevState,
@@ -100,7 +100,7 @@ export default function McToolsContextProvider({ children }) {
 
   function handleSetUrlGen(obj) {
     const data = obj ?? undefined;
-    console.log(`In Context handleSetUrlGen & data =`, data);
+    // console.log(`In Context handleSetUrlGen & data =`, data);
     setMasterTools((prevState) => {
       return {
         ...prevState,

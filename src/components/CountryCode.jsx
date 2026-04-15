@@ -20,7 +20,7 @@ export default function CountryCode() {
     return country.toLocaleLowerCase();
   });
 
-  console.log(`countryCode = ${countryCode.test}`);
+  // console.log(`countryCode = ${countryCode.test}`);
 
   var exp = new RegExp(/^[a-zA-Z0-9_-]+$/);
   function handleClick() {

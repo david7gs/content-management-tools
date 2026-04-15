@@ -21,7 +21,7 @@ export default function LocaleGenerator() {
     isDisable: false,
   });
 
-  console.log(`localeList = ${localeList?.test}`);
+  // console.log(`localeList = ${localeList?.test}`);
 
   function handleInput(e) {
     const value = e.target.value;
