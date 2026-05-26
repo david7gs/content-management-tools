@@ -1,92 +1,41 @@
-import { useState, useContext } from "react";
+import { useContext, useRef, useEffect } from "react";
 import { McToolsContext } from "../store/mcTools_context.jsx";
-
 import Input from "./Input";
+import DownArrow from "../assets/svg/DownArrow.svg";
 
 export default function LocaleList() {
-  const { handleToolTipClick } = useContext(McToolsContext);
-  const [data, setData] = useState({
-    firstString: [],
-    firstStringCount: 0,
-    secondString: [],
-    secondStringCount: 0,
-  });
-  const [hasL, setHasL] = useState([]);
-  const [hasNotL, setHasNotL] = useState([]);
-  const [hasS, setHasS] = useState([]);
-  const [hasNotS, setHasNotS] = useState([]);
-  const [isCompare, setCompare] = useState(false);
+  const {
+    compareLocales,
+    handleCompareLocaleChange,
+    handleGetCompareLocales,
+    handleClearLocaleListInput,
+    handleResetCompareLocales,
+    handleOnFocusLocaleList,
+    handleToolTipClick,
+  } = useContext(McToolsContext);
 
-  function updateValues(value, name) {
-    const cleanValue = value.replace(/\s+/g, "").split(",");
-    // const cleanValue = value.replace(/,\s*$/, "").split(",");
-    if (value != "") {
-      setData((prevState) => {
-        return {
-          ...prevState,
-          [name]: cleanValue,
-          [name + `Count`]: value.split(",").length,
-        };
-      });
-    } else {
-      setData((prevState) => {
-        return {
-          ...prevState,
-          [name]: [],
-          [name + `Count`]: 0,
-        };
-      });
+  const scrollTo = useRef(null);
+
+  useEffect(() => {
+    if (scrollTo.current) {
+      setTimeout(() => {
+        scrollTo.current?.scrollIntoView({ behavior: "smooth" });
+      }, 1000);
+      // scrollTo.current?.scrollIntoView({ behavior: "smooth" });
     }
-  }
-  function getCompare() {
-    const fieldOne = [...data.firstString];
-    const fieldTwo = [...data.secondString];
-    const longArr = fieldOne.length > fieldTwo.length ? fieldOne : fieldTwo;
-    const shortArr = fieldOne.length < fieldTwo.length ? fieldOne : fieldTwo;
-    const includesL = [];
-    const notIncludesL = [];
-    const includesS = [];
-    const notIncludesS = [];
-    fieldOne.map((locale, i) => {
-      if (fieldTwo.includes(locale)) {
-        includesL.push(locale);
-      } else {
-        notIncludesL.push(locale);
-      }
-    });
-    fieldTwo.map((locale, i) => {
-      if (fieldOne.includes(locale)) {
-        includesS.push(locale);
-      } else {
-        notIncludesS.push(locale);
-      }
-    });
-    setHasL((prevState) => {
-      return [...includesL];
-    });
-    setHasNotL((prevState) => {
-      return [...notIncludesL];
-    });
-    setHasS((prevState) => {
-      return [...includesS];
-    });
-    setHasNotS((prevState) => {
-      return [...notIncludesS];
-    });
-    const noMatch = setCompare(!isCompare);
-  }
+  }, []);
 
-  function handleReset(e) {
-    setData((prevState) => {
-      return {
-        ...prevState,
-        firstString: [],
-        firstStringCount: 0,
-        secondString: [],
-        secondStringCount: 0,
-      };
-    });
-  }
+  const data = compareLocales;
+  const errorFieldOne =
+    data.isError &&
+    (data.errorLocation === "both" || data.errorLocation === "firstInput")
+      ? true
+      : false;
+  const errorFieldTwo =
+    data.isError &&
+    (data.errorLocation === "both" || data.errorLocation === "secondInput")
+      ? true
+      : false;
 
   return (
     <>
@@ -116,68 +65,107 @@ export default function LocaleList() {
         </div>
         <div className="input-wrap">
           <div className="input-col">
-            <label htmlFor="firstString">
+            <label htmlFor="firstInput">
               Field 1 Locales&nbsp;
-              {data.hasOwnProperty("firstStringCount") &&
-                data.firstStringCount != 0 && (
-                  <span className="locale-count">
-                    ({data.firstStringCount})
-                  </span>
-                )}
+              {data.firstInputArr.length > 0 && (
+                <span className="locale-count">
+                  ({compareLocales.firstInputArr.length})
+                </span>
+              )}
             </label>
             <Input
+              className="myTester"
               type="textarea"
-              name="firstString"
-              id="firstString"
-              updateValues={updateValues}
+              name="firstInput"
+              id="firstInput"
+              dataType="locale-list"
+              value={data.firstInput}
+              isError={errorFieldOne}
+              errorType={data.errorType}
+              errorLocation={data.errorLocation}
+              onChange={handleCompareLocaleChange}
+              onFocus={handleOnFocusLocaleList}
               rows="4"
               cols="50"
               placeholder="ex: en_AU, en_CA, fr_CA, es_CL, de_DE"
             />
+            <button
+              className="locale-list__clear"
+              onClick={handleClearLocaleListInput}
+              data-input="firstInput"
+            >
+              Clear input
+            </button>
+            <div className="error-container">
+              {errorFieldOne && `Please enter list of locales to compare`}
+            </div>
           </div>
 
           <div className="input-col">
-            <label htmlFor="secondString">
+            <label htmlFor="secondInput">
               Field 2 Locales&nbsp;
-              {data.hasOwnProperty("secondStringCount") &&
-                data.secondStringCount != 0 && (
-                  <span className="locale-count">
-                    ({data.secondStringCount})
-                  </span>
-                )}
+              {data.secondInputArr?.length > 0 && (
+                <span className="locale-count">
+                  ({compareLocales.secondInputArr.length})
+                </span>
+              )}
             </label>
             <Input
               type="textarea"
-              name="secondString"
-              id="secondString"
-              updateValues={updateValues}
-              onClick={handleReset}
+              name="secondInput"
+              id="secondInput"
+              dataType="locale-list"
+              value={data.secondInput}
+              isError={errorFieldTwo}
+              errorType={data.errorType}
+              errorLocation={data.errorLocation}
+              onChange={handleCompareLocaleChange}
+              onFocus={handleOnFocusLocaleList}
+              // onClick={handleReset}
               rows="4"
               cols="50"
               placeholder="ex: en_AU, en_CA, fr_CA, es_CL, de_DE"
             />
+            <button
+              className="locale-list__clear"
+              onClick={handleClearLocaleListInput}
+              data-input="secondInput"
+            >
+              Clear Input
+            </button>
+            <div className="error-container">
+              {errorFieldTwo && `Please enter list of locales to compare`}
+            </div>
           </div>
         </div>
 
         <div className="seperator-button">
-          <button className="compare-button" onClick={getCompare}>
+          <button className="compare-button" onClick={handleGetCompareLocales}>
             Compare
           </button>
+          <button className="reset-button" onClick={handleResetCompareLocales}>
+            Reset Inputs
+          </button>
+          {data?.isComparisonGood && (
+            <span className="down-arrow bounce">
+              <DownArrow />
+            </span>
+          )}
         </div>
-        {isCompare && (
+        {data?.isComparisonGood && (
           <div className="compare-wrap slide-in">
             <div className="compare-wrap__label">
-              Locales in both strings ({hasL.length})
+              Locales in both strings ({data.matchingLocales.length})
             </div>
-            <div>{hasL.join(", ")}</div>
+            <div>{data.matchingLocales.join(", ")}</div>
             <div className="compare-wrap__label">
-              Locales in field 1 not in field 2 ({hasNotL.length})
+              Locales in field 1 not in field 2 ({data.fieldOneNotTwo?.length})
             </div>
-            <div>{hasNotL.join(", ")}</div>
+            <div>{data.fieldOneNotTwo.join(", ")}</div>
             <div className="compare-wrap__label">
-              Locales in field 2 not in field 1 ({hasNotS.length})
+              Locales in field 2 not in field 1 ({data.fieldTwoNotOne?.length})
             </div>
-            <div>{hasNotS.join(", ")}</div>
+            <div>{data.fieldTwoNotOne.join(", ")}</div>
           </div>
         )}
       </div>

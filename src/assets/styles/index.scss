@@ -1,6 +1,6 @@
 @import "./normalize.scss";
-@import "./animation.scss";
 @import "./variables.scss";
+@import "./animation.scss";
 
 /* ============================================
   GLOBAL ELEMENTS
@@ -66,7 +66,7 @@ ol {
 ul {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  //gap: 1rem;
   padding-inline-start: 0;
   a {
     padding: 7px 15px;
@@ -92,11 +92,20 @@ ul {
 ol,
 ul {
   li {
-    margin-bottom: 6px;
+    // margin-bottom: 6px;
     padding: 0;
     text-indent: 0;
     list-style-type: 0;
   }
+}
+textarea:active,
+input:active {
+}
+textarea:active,
+input:active {
+}
+
+textarea[type="text"]:-webkit-autofill:active input[type="text"]:focus {
 }
 /* ============================================
    FLEXBOX UTILITIES
@@ -245,18 +254,22 @@ textarea::placeholder {
   // gap: 1rem;
   // width: 500px;
   // margin-top: 0.75rem;
-  gap: 1.5rem;
+  // gap: 1.5rem;
   width: 100%;
-  margin-top: 1.5rem;
+  // margin-top: 1.5rem;
   @media (max-width: $sm) {
     gap: 1rem;
     margin-top: 1rem;
+  }
+  &.g1 {
+    gap: 1rem;
   }
 
   .input-col {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    margin-bottom: 6px;
     label {
       text-align: left;
       font-weight: 500;
@@ -276,6 +289,10 @@ textarea::placeholder {
           }
         }
       }
+    }
+    .error-container {
+      height: 16px;
+      color: red;
     }
     .country-code__input {
       // width: 4rem;
@@ -301,6 +318,9 @@ textarea::placeholder {
       @media (max-width: $sm) {
         min-height: 100px;
       }
+      &.error {
+        border-color: red;
+      }
     }
     input {
       width: 100%;
@@ -308,6 +328,9 @@ textarea::placeholder {
       border: 1px solid #c1c2c7;
       border-radius: 6px;
       font-size: 1rem;
+      &.error {
+        border-color: red;
+      }
     }
   }
 }
@@ -316,7 +339,7 @@ textarea::placeholder {
   ============================================ */
 .compare-wrap {
   // size: 1.5rem;
-  gap: 1rem;
+  // gap: 1rem;
   margin-top: 1rem;
   @media (max-width: $sm) {
     margin-top: 0.75rem;
@@ -352,8 +375,9 @@ textarea::placeholder {
   margin: 1rem 0;
   font-weight: 600;
 }
-.compare-button {
-  margin-top: 1rem;
+.compare-button,
+.reset-button {
+  // margin-top: 1rem;
   @media (max-width: $sm) {
     margin-top: 0.75rem;
     width: 100%;
@@ -418,6 +442,24 @@ textarea::placeholder {
   flex-wrap: wrap;
   @media (max-width: $sm) {
     gap: 0.5rem;
+  }
+}
+
+.down-arrow {
+  // font-size: 22px;
+  // font-weight: 600;
+  width: 25px;
+  height: 25px;
+  // background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1MTIgNTEyIiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwYXRoIGZpbGw9IiNGRkZGRkYiIGQ9Ik0yOTMuNzUxLDQ1NS44NjhjLTIwLjE4MSwyMC4xNzktNTMuMTY1LDE5LjkxMy03My42NzMtMC41OTVsMCwwYy0yMC41MDgtMjAuNTA4LTIwLjc3My01My40OTMtMC41OTQtNzMuNjcyICBsMTg5Ljk5OS0xOTBjMjAuMTc4LTIwLjE3OCw1My4xNjQtMTkuOTEzLDczLjY3MiwwLjU5NWwwLDBjMjAuNTA4LDIwLjUwOSwyMC43NzIsNTMuNDkyLDAuNTk1LDczLjY3MUwyOTMuNzUxLDQ1NS44Njh6Ii8+DQo8cGF0aCBmaWxsPSIjRkZGRkZGIiBkPSJNMjIwLjI0OSw0NTUuODY4YzIwLjE4LDIwLjE3OSw1My4xNjQsMTkuOTEzLDczLjY3Mi0wLjU5NWwwLDBjMjAuNTA5LTIwLjUwOCwyMC43NzQtNTMuNDkzLDAuNTk2LTczLjY3MiAgbC0xOTAtMTkwYy0yMC4xNzgtMjAuMTc4LTUzLjE2NC0xOS45MTMtNzMuNjcxLDAuNTk1bDAsMGMtMjAuNTA4LDIwLjUwOS0yMC43NzIsNTMuNDkyLTAuNTk1LDczLjY3MUwyMjAuMjQ5LDQ1NS44Njh6Ii8+DQo8L3N2Zz4=);
+  // background-size: contain;
+  // opacity: 0;
+  &.bounce {
+    animation: bounceIn 2s infinite 2s;
+    svg {
+      // fill: #000;
+      width: 25px;
+      height: 25px;
+    }
   }
 }
 

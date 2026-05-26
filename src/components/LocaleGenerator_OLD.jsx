@@ -3,7 +3,8 @@ import { McToolsContext } from "../store/mcTools_context.jsx";
 import Input_test from "./Input_test";
 
 export default function LocaleGenerator() {
-  const { handleToolTipClick } = useContext(McToolsContext);
+  const { localeList, handleSetLocaleList, handleToolTipClick } =
+    useContext(McToolsContext);
   const [data, setData] = useState({
     firstInput: "",
     firstInputArr: [],
@@ -19,6 +20,8 @@ export default function LocaleGenerator() {
     isEmpty: true,
     isDisable: false,
   });
+
+  console.log(`localeList = ${localeList?.test}`);
 
   function handleInput(e) {
     const value = e.target.value;

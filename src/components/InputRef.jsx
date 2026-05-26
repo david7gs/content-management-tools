@@ -1,36 +1,29 @@
 import { useState, useRef } from "react";
 
-export default function Input_ref({
+export default function InputRef({
   type,
   name,
   ref,
   className,
+  placeholder,
   inputClass,
   maxLength,
   value,
   label,
   rows,
   cols,
-  handleOnChange,
+  onChange,
   handlePaste,
   handleClick,
   onFocus,
   disable,
+  isError,
+  errorType,
+  errorLocation,
   updateValues,
   myInputTest,
   children,
 }) {
-  // const [string, setString] = useState("");
-  // function handleChange(e) {
-  //   const value = e.target.value;
-  //   const name = e.target.name;
-  //   console.log(e.target.name, `& ${name}`);
-  //   setString((prevState) => {
-  //     prevState + value;
-  //   });
-  //   updateValues(value, name);
-  // }
-  // const onChangeFunc = handleChange != undefined ? handleChange : myInputTest;
   const inputField =
     type === "textarea" ? (
       <textarea
@@ -40,27 +33,35 @@ export default function Input_ref({
         rows={rows}
         cols={cols}
         maxLength={maxLength}
-        onChange={handleOnChange}
+        value={value}
+        placeholder={placeholder}
+        onChange={onChange}
         onPaste={handlePaste}
-        onClick={handleClick}
-        onFocus={onFocus}
-        ref={ref}
-        disabled={disable}
-        // value={string}
+        isError={isError}
+        errorType={errorType}
+        errorLocation={errorLocation}
+        autoComplete={`off`}
+        // onClick={handleClick}
+        // onFocus={onFocus}
+        // ref={ref}
+        // disabled={disable}
       />
     ) : type === "input" ? (
       <input
         className={className}
         name={name}
         type={type}
-        ref={ref}
         maxLength={maxLength}
-        onChange={handleOnChange}
+        onChange={onChange}
         onPaste={handlePaste}
-        onClick={handleClick}
-        onFocus={onFocus}
-        disabled={disable}
+        isError={isError}
+        errorType={errorType}
+        errorLocation={errorLocation}
         autoComplete={`off`}
+        // disabled={disable}
+        //ref={ref}
+        // onClick={handleClick}
+        // onFocus={onFocus}
       />
     ) : (
       <input

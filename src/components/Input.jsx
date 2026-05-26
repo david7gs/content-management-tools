@@ -1,52 +1,80 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export default function Input({
   type,
   name,
+  dataType,
+  ref,
+  isError,
+  className,
+  placeholder,
+  inputClass,
+  maxLength,
+  value,
   label,
   rows,
   cols,
-  updateValues,
+  onChange,
+  handlePaste,
+  handleClick,
+  onFocus,
   disable,
-  placeholder,
+  updateValues,
+  children,
 }) {
-  const [string, setString] = useState("");
-  function handleChange(e) {
-    const value = e.target.value;
-    const name = e.target.name;
-    setString((prevState) => {
-      prevState + value;
-    });
-    updateValues(value, name);
-  }
   const inputField =
     type === "textarea" ? (
       <textarea
         id={name}
+        className={isError ? "error" : undefined}
         name={name}
+        data-type={dataType}
         rows={rows}
         cols={cols}
-        onChange={handleChange}
-        value={string}
-        disabled={disable}
+        maxLength={maxLength}
+        onChange={onChange}
+        onPaste={handlePaste}
+        value={value}
         placeholder={placeholder}
+        disabled={disable}
+        // onClick={handleClick}
+        onFocus={onFocus}
+        // ref={ref}
       />
     ) : type === "input" ? (
       <input
-        name={name}
         type={type}
+        // className={isError ? "error" : undefined}
+        className={!isError ? className : `${className} error`}
+        id={name}
+        name={name}
+        data-type={dataType}
+        value={value}
+        maxLength={maxLength}
+        onChange={onChange}
+        onPaste={handlePaste}
         disabled={disable}
-        placeholder={placeholder}
+        autoComplete={`off`}
+        // ref={ref}
+        // onClick={handleClick}
+        onFocus={onFocus}
       />
     ) : (
-      <input name={name} placeholder={placeholder} />
+      <input
+        className={className}
+        ref={ref}
+        name={name}
+        maxLength={maxLength}
+      />
     );
   return (
     <div className="input-field">
-      <label className="compare-wrap__label" htmlFor={name}>
-        {label}
-      </label>
-      {inputField}
+      {/* <div className={`input-field ${inputClass && inputClass}`}> */}
+      {label && <label className="compare-wrap__label">{label}</label>}
+      <div className="flex-row">
+        {inputField}
+        {children}
+      </div>
     </div>
   );
 }

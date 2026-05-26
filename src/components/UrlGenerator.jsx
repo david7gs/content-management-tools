@@ -1,136 +1,95 @@
-import { useState, useRef, useEffect, useContext } from "react";
+import { useRef, useEffect, useContext } from "react";
 import { McToolsContext } from "../store/mcTools_context.jsx";
-import Input_test from "./Input_test";
-import { LocaleList, CountryList } from "../helpers/localeMaping.js";
+import Input from "./Input";
 
 export default function UrlGenerator() {
-  const { urlGen, handleSetUrlGen, handleToolTipClick } =
-    useContext(McToolsContext);
-  const [data, setData] = useState({
-    url: "",
-    input: "",
-    trimmedArr: [],
-    trimmedArrCount: 0,
-    localesCount: undefined,
-    urlArr: [],
-    showUrlList: false,
-    isVisited: [],
-  });
+  const {
+    urlGen,
+    handleUrlGeneratorOnChange,
+    handleGetUrlGenerator,
+    setUrlGeneratorVisited,
+    handleGetUrlGeneratorOnFocus,
+    handleToolTipClick,
+  } = useContext(McToolsContext);
 
-  // console.log(`urlGen = ${urlGen.test}`);
+  const data = { ...urlGen };
 
-  const eStart = useRef(null);
+  const scrollTo = useRef(null);
 
   useEffect(() => {
-    if (eStart.current) {
-      eStart.current.scrollIntoView({ behavior: "smooth" });
+    if (scrollTo.current) {
+      scrollTo.current.scrollIntoView({ behavior: "smooth" });
     }
   }, []);
 
-  function handleUrl(e) {
-    setData((prevState) => {
-      return {
-        ...prevState,
-        [e.target.name]: e.target.value.replace(/\s+/g, ""),
-      };
-    });
-  }
+  const localesCount = data.trimmedArrCount > 0 ? true : false;
 
-  function handleLocaleChange(e) {
-    const value = e.target.value;
-    const newArr = value
-      .replace(/\n+/g, ",")
-      .replace(/\t/g, ",")
-      .replace(/,\s*$/, "")
-      .split(",");
-    const trimmedArr = newArr.map((item) => item.trim());
-    setData((prevState) => {
-      return {
-        ...prevState,
-        input: value,
-        trimmedArr: [...trimmedArr],
-        trimmedArrCount: trimmedArr.length,
-      };
-    });
-  }
-
-  function handleShowListClick() {
-    const localesArr = [...data.trimmedArr];
-    const urlParams = [...CountryList];
-    const url = new URL(data.url);
-    const protocol = url.protocol;
-    const hostname = url.hostname;
-    const pathname = url.pathname;
-    const param = url.search;
-    const testingUrls = [];
-    localesArr.map((locale, i) => {
-      const index = LocaleList.indexOf(locale);
-      const urlParam = urlParams[index];
-      const previewUrl =
-        locale === "zh_CN"
-          ? protocol + "//" + hostname + ".cn" + pathname + param
-          : protocol + "//" + hostname + urlParam + pathname + param;
-      testingUrls.push(previewUrl);
-    });
-    setData((prevState) => {
-      const setShow = prevState.showUrlList;
-      return {
-        ...prevState,
-        urlArr: [...testingUrls],
-        showUrlList: !setShow,
-        isVisited: [],
-      };
-    });
-  }
-
-  function setVisited(i) {
-    setData((prevState) => {
-      const visitedArr = [...prevState.isVisited];
-      visitedArr.push(i);
-      return {
-        ...prevState,
-        isVisited: [...visitedArr],
-      };
-    });
-  }
+  // TODO - refine logic
+  const errorURLField =
+    data.isError &&
+    (data.errorLocation === "BOTH" || data.errorLocation === "URL")
+      ? true
+      : false;
+  const errorLocaleField =
+    data.isError &&
+    (data.errorLocation === "BOTH" || data.errorLocation === "LOCALE")
+      ? true
+      : false;
 
   return (
     <>
-      <h3>Generate a list of URLs</h3>
-      <h4>
-        Enter your preview URL and a list of locales to generate a list of
-        clickable URLs to test content authoring
-      </h4>
       <div className="input-wrap slide-in">
+        <div className="slide-in__description">
+          <h3>Generate a list of URLs</h3>
+          <p>
+            Enter your preview URL and a list of locales to generate a list of
+            clickable URLs to test content authoring
+          </p>
+        </div>
         <div className="input-col">
           <label htmlFor="url">Preview URL</label>
-          <Input_test
+          <Input
             type="textarea"
             name="url"
             id="url"
+            value={data.url}
             rows="2"
             cols="50"
-            handleOnChange={handleUrl}
+            dataType="URL"
+            isError={errorURLField}
+            placeholder="ex: https://myurl.com"
+            onChange={handleUrlGeneratorOnChange}
+            onFocus={handleGetUrlGeneratorOnFocus}
           />
+          <div className="error-container">
+            {errorURLField && `Please enter a valid URL`}
+          </div>
         </div>
         <div className="input-col">
           <label htmlFor="locales">
             Locales&nbsp;
-            {data.localesCount != undefined && (
-              <span className="locale-count">({data.locales.length})</span>
+            {localesCount && (
+              <span className="locale-count">({data.trimmedArrCount})</span>
             )}
           </label>
-          <Input_test
+          <Input
             type="textarea"
             name="locales"
             id="locales"
-            handleOnChange={handleLocaleChange}
-            // disable={disable}
+            dataType="LOCALE"
+            isError={errorLocaleField}
+            value={data.input}
+            placeholder="ex: en_AU, en_CA, fr_CA, es_CL, de_DE"
+            onChange={handleUrlGeneratorOnChange}
+            onFocus={handleGetUrlGeneratorOnFocus}
             rows="4"
             cols="50"
           />
+          <div className="error-container">
+            {errorLocaleField && `Please enter a valid list of locales`}
+          </div>
         </div>
-        <button className={`full-width`} onClick={handleShowListClick}>
+        <button className={`full-width`} onClick={handleGetUrlGenerator}>
           Generate URL list
         </button>
       </div>
@@ -138,14 +97,18 @@ export default function UrlGenerator() {
         <div className="preview-list">
           <h4>List of generated preview URLs</h4>
           <div className="list-wrap">
-            <ul ref={eStart}>
+            <ul ref={scrollTo}>
               {data.urlArr.map((url, i) => {
                 const c = data;
                 const classes = data.isVisited.includes(i)
                   ? "url-link visited"
                   : "url-link";
                 return (
-                  <li className="button" key={i} onClick={() => setVisited(i)}>
+                  <li
+                    className="button"
+                    key={i}
+                    onClick={() => setUrlGeneratorVisited(i)}
+                  >
                     <a
                       className={classes}
                       href={url}

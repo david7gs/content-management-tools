@@ -10,18 +10,10 @@ export default function App() {
   const { isToolTip, toolTip, handleToolTipClose } = useContext(McToolsContext);
 
   const [view, setView] = useState("localeList");
+
   function handleSelectClick(selection) {
     setView(selection);
   }
-
-  // const modalContent = (
-  //   <div className="modal__background">
-  //     <div className="tool-tip__modal">
-  //       this is my modal
-  //       <button onClick={() => handleToolTipClose()}>Close</button>
-  //     </div>
-  //   </div>
-  // );
 
   return (
     <>
@@ -83,7 +75,6 @@ export default function App() {
           {view === "countryCode" && <CountryCode />}
           {view === "urlGenerator" && <UrlGenerator />}
         </div>
-        {/* / page-wrap */}
       </div>
     </>
   );
