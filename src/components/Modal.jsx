@@ -14,10 +14,19 @@ export default function Modal({ children }) {
 
   return (
     <div className="modal__background onClick" onClick={handleModalClose}>
-      <div className="tool-tip__modal">
+      <div className="tool-tip__modal scroll">
         {data.desc.map((item, i) => {
           return <p key={i}>{item}</p>;
         })}
+        {data?.img &&
+          data.img.map((img, i) => {
+            return (
+              <div className="modal-img">
+                <img src={img.path} />
+                <p>{img.caption}</p>
+              </div>
+            );
+          })}
         {data?.example && (
           <div className="example">
             <h4>Example:</h4>

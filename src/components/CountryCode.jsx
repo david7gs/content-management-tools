@@ -1,6 +1,7 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import Input from "./Input";
 import { McToolsContext } from "../store/mcTools_context.jsx";
+import { OnEnterHook } from "../helpers/OnEnterHook.jsx";
 
 export default function CountryCode() {
   const {
@@ -11,6 +12,9 @@ export default function CountryCode() {
     handleToolTipClick,
   } = useContext(McToolsContext);
   const data = countryCode;
+  // console.log(`CountryCode and data =`, data);
+
+  OnEnterHook(handleGetCountryCode);
 
   const errorMessage =
     data.isValid === "SHORT" || data.isValid === "EMPTY"
@@ -21,12 +25,26 @@ export default function CountryCode() {
           ? `Please enter only alpha numeric characters, underscore, or hyphen`
           : `There is an error in your input`;
 
+  function getKeyPress(e) {
+    console.log(`enter key pressed =`, e);
+    // if (e.key === "return") {
+    //   console.log(`enter key pressed`);
+    // }
+  }
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      // Your action here
+      console.log("Enter key pressed");
+    }
+  };
+
   return (
     <>
       <div className="locale-list slide-in">
         <div className="description">
-          Enter a country code (ex. "us") to get a locale ("en_US") or a locale
-          (ex. "en_US") to get a country code ("us").
+          Enter a country code (e.g., ca) to get its locale (en_CA), or enter a
+          locale (e.g., en_CA) to get its country code (ca).
           <button
             className="tool-tip"
             title="See examples of content that can be entered in this tool"

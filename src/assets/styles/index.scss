@@ -54,8 +54,8 @@ ol {
   }
 
   li {
-    margin-bottom: 0.75rem;
-    line-height: 1.5;
+    margin-bottom: 0.35rem;
+    //line-height: 1.5;
 
     p {
       margin: 0;
@@ -139,6 +139,7 @@ textarea[type="text"]:-webkit-autofill:active input[type="text"]:focus {
     position: fixed;
     top: 50%;
     left: 50%;
+    max-height: 90%;
     transform: translate(-50%, -50%);
     background-color: #fff;
     padding: 1rem;
@@ -146,6 +147,19 @@ textarea[type="text"]:-webkit-autofill:active input[type="text"]:focus {
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     animation: fade-in 0.6s;
     z-index: 1000;
+    &.scroll {
+      flex-grow: 1;
+      overflow-y: auto;
+      scroll-padding: 0 50%;
+      scroll-snap-type: y mandatory;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .modal-img {
+      img {
+        width: 100%;
+      }
+    }
   }
 }
 
@@ -294,6 +308,24 @@ textarea::placeholder {
       height: 16px;
       color: red;
     }
+    .input-sm {
+      text-align: center;
+      width: 5rem;
+      height: 2rem;
+      padding: 0.5rem;
+      border: 1px solid #c1c2c7;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    .input-md {
+      text-align: center;
+      width: 350px;
+      height: 2rem;
+      padding: 0.5rem;
+      border: 1px solid #c1c2c7;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
     .country-code__input {
       // width: 4rem;
       // height: 1.5rem;
@@ -341,11 +373,27 @@ textarea::placeholder {
   // size: 1.5rem;
   // gap: 1rem;
   margin-top: 1rem;
+  font-weight: 600;
   @media (max-width: $sm) {
     margin-top: 0.75rem;
   }
+  h4 {
+    font-weight: 600;
+  }
   ul {
     gap: 0.5rem;
+  }
+  .heading-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    button {
+      &.copy-string {
+        font-size: 12px;
+        width: 100px;
+      }
+    }
   }
   .compare-wrap__label {
     // margin-bottom: 0;
@@ -367,6 +415,9 @@ textarea::placeholder {
     @media (max-width: 480px) {
       font-size: 0.7rem;
       // padding: 5px 10px;
+    }
+    &.indicator {
+      background-color: rgba(138, 154, 91, 0.5);
     }
   }
 }

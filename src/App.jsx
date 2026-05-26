@@ -5,6 +5,7 @@ import LocaleList from "./components/LocaleList";
 import UrlGenerator from "./components/UrlGenerator";
 import CountryCode from "./components/CountryCode";
 import Modal from "./components/Modal";
+import TokenGenerator from "./components/TokenGenerator.jsx";
 
 export default function App() {
   const { isToolTip, toolTip, handleToolTipClose } = useContext(McToolsContext);
@@ -22,26 +23,26 @@ export default function App() {
         <div className="page-wrap">
           <h1>Content Management Resources</h1>
           <h4>
-            CM Resources is a set of calculation tools to help content managers
-            configure and manage content quickly and with precision across a
-            large number of locales and countries
+            <strong>CM Resources</strong> is a collection of tools that help
+            content managers set up and manage content quickly and accurately
+            across many locales and countries.
           </h4>
           <ol>
             <li>
-              Compare Locale lists - find the differences between two locale
-              lists
+              <strong>Compare Locale Lists</strong> - Spot the differences
+              between two locale lists
             </li>
             <li>
-              Locale List Generator - For a given content matrix, quickly
-              determine what locales are in scope for the given section
+              <strong>Locale List Generator</strong> - Find which locales apply
+              to a specific section of a content matrix
             </li>
             <li>
-              Get a Country Code - enter a locale and get the corresponding
-              country code and vice versa
+              <strong>Get a Country Code</strong> - Look up a country code from
+              a locale, or a locale from a country code
             </li>
             <li>
-              URL Generator - Generate a list of localized links from a URL and
-              a list of locales
+              <strong>URL Generator</strong> - Create a list of localized links
+              using a URL and a locale list
             </li>
           </ol>
           <div className="function-selector">
@@ -69,11 +70,18 @@ export default function App() {
             >
               Testing URL Generator
             </button>
+            <button
+              onClick={() => handleSelectClick("tokenGenerator")}
+              className={view === "tokenGenerator" ? `active` : undefined}
+            >
+              Token Generator
+            </button>
           </div>
           {view === "localeList" && <LocaleList />}
           {view === "localeListGenerator" && <LocaleGenerator />}
           {view === "countryCode" && <CountryCode />}
           {view === "urlGenerator" && <UrlGenerator />}
+          {view === "tokenGenerator" && <TokenGenerator />}
         </div>
       </div>
     </>

@@ -1,5 +1,6 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { McToolsContext } from "../store/mcTools_context.jsx";
+import { OnEnterHook } from "../helpers/OnEnterHook.jsx";
 import Input from "./Input";
 import DownArrow from "../assets/svg/DownArrow.svg";
 
@@ -15,6 +16,32 @@ export default function LocaleGenerator() {
     handleToolTipClick,
   } = useContext(McToolsContext);
 
+  OnEnterHook(handleGetLocaleGeneratorList);
+
+  function CopyButton({ textToCopy, className }) {
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = async () => {
+      if (!textToCopy) return;
+      try {
+        await navigator.clipboard.writeText(textToCopy);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000); // Reset status after 2s
+      } catch (err) {
+        console.error("Failed to copy text: ", err);
+      }
+    };
+
+    return (
+      <button
+        className={className}
+        onClick={() => handleCopy(data.firstInputArr)}
+      >
+        {copied ? "Copied!" : "Copy Locales"}
+      </button>
+    );
+  }
+
   const data = localeList;
   const results =
     errorType === "localeListInputIsEmpty" ? (
@@ -28,13 +55,27 @@ export default function LocaleGenerator() {
     ) : (
       // <div className="compare-wrap slide-in">here</div>
       <div className="compare-wrap g1 slide-in">
-        <h4>Locales in scope ({data.localesWithContentArr?.length})</h4>
+        <div className="heading-wrap">
+          <h4>Locales in scope ({data.localesWithContentArr?.length})</h4>
+          <CopyButton
+            className={`copy-string`}
+            textToCopy={data.localesWithContentArr.join(", ")}
+          />
+        </div>
         {data.localesWithContentArr?.join(", ")}
         <ul>
-          Input map
+          Input map - visualy compare results with matrix
           {data.firstInputArr.map((locale, i) => {
             return (
-              <li className="compare-wrap__row" key={i}>
+              <li
+                className={
+                  data.secondInputArr[i] != ""
+                    ? "compare-wrap__row indicator"
+                    : "compare-wrap__row"
+                }
+                key={i}
+              >
+                {/* <li className="compare-wrap__row" key={i}> */}
                 <span>{locale}</span>
                 <span>{data.secondInputArr[i] != "" && "⦿"}</span>
               </li>
@@ -62,8 +103,8 @@ export default function LocaleGenerator() {
         <div className="description">
           <h4>Locale List Generator</h4>
           <p>
-            Quickly generate a list of locales in scope for a given content
-            update or variation.
+            Quickly generate a list of locales for a given content update or
+            variation.
             <button
               className="tool-tip"
               title="See examples of content that can be entered in this tool"
@@ -73,8 +114,8 @@ export default function LocaleGenerator() {
             </button>
           </p>
           <p>
-            In this first field, input a string of locales copied from source
-            such as a content matrix in the first field.
+            Paste a list of locales from your source (such as a content matrix)
+            into the first field.
           </p>
         </div>
         <div className="input-wrap">
@@ -105,7 +146,7 @@ export default function LocaleGenerator() {
               {LocaleError
                 ? data.errorType === "noValidLocales"
                   ? `Valid locales are required to retrieve data. Please enter valid locales. ex: en_CA, es_MX`
-                  : `Please enter required data. Unable to generate locale list`
+                  : `Unable to generate locale list, Please enter required data.`
                 : null}
             </div>
           </div>
@@ -143,7 +184,7 @@ export default function LocaleGenerator() {
             />
             <div className="error-container">
               {urlError &&
-                `Please enter required data. Unable to generate locale list`}
+                `Unable to generate locale list, Please enter required data.`}
             </div>
             <div className="seperator-button">
               <button
@@ -174,9 +215,17 @@ export default function LocaleGenerator() {
         </button> */}
         {data.isError && data.errorType === "localeListInputNotEqual" && (
           <div className="error">
-            Number of locales do not match number of cells. Unable to generate
-            locale list. Please reset the fields and try pasting locales before
-            pasting indicator cells.
+            The number of locales does not match the number of indicator cells.
+            Unable to generate locale list. This could be caused by hidden data
+            from the document the data comes from. Please see this tool tip for
+            more information.
+            <button
+              className="tool-tip"
+              title="See examples of possible reasons this tool may not be working"
+              onClick={() => handleToolTipClick("LOCALE_LIST_GENERATOR_HELP")}
+            >
+              ?
+            </button>
           </div>
         )}
         {data.isLocaleListGenerate && <div>{results}</div>}

@@ -1,5 +1,6 @@
 import { useContext, useRef, useEffect } from "react";
 import { McToolsContext } from "../store/mcTools_context.jsx";
+import { OnEnterHook } from "../helpers/OnEnterHook.jsx";
 import Input from "./Input";
 import DownArrow from "../assets/svg/DownArrow.svg";
 
@@ -14,8 +15,9 @@ export default function LocaleList() {
     handleToolTipClick,
   } = useContext(McToolsContext);
 
-  const scrollTo = useRef(null);
+  OnEnterHook(handleGetCompareLocales);
 
+  const scrollTo = useRef(null);
   useEffect(() => {
     if (scrollTo.current) {
       setTimeout(() => {
@@ -43,14 +45,13 @@ export default function LocaleList() {
         <div className="slide-in__description">
           <h4>Compare Locale Lists</h4>
           <p>
-            This tool is useful for comparing locale lists from different
-            sources, such as a list of locales supported by a product and a list
-            of locales used in a project.
+            Use this tool to compare two locale lists side by side and see
+            what's different between them.
           </p>
           <p>
-            Your lists should be in the format of a comma deliminated list of
-            locales in the format of language code + underscore + country code -
-            ex: en_CA, es_ES, pt_BR
+            Your lists should be formatted as a comma-separated list using the
+            language code + underscore + country code format -- for example:
+            en_CA, es_ES, pt_BR
           </p>
           <p>
             Enter your locale lists below.{" "}
@@ -159,11 +160,13 @@ export default function LocaleList() {
             </div>
             <div>{data.matchingLocales.join(", ")}</div>
             <div className="compare-wrap__label">
-              Locales in field 1 not in field 2 ({data.fieldOneNotTwo?.length})
+              Locales in field 1, BUT not in field 2 (
+              {data.fieldOneNotTwo?.length})
             </div>
             <div>{data.fieldOneNotTwo.join(", ")}</div>
             <div className="compare-wrap__label">
-              Locales in field 2 not in field 1 ({data.fieldTwoNotOne?.length})
+              Locales in field 2, BUT not in field 1 (
+              {data.fieldTwoNotOne?.length})
             </div>
             <div>{data.fieldTwoNotOne.join(", ")}</div>
           </div>

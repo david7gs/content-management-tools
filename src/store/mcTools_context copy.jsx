@@ -4,7 +4,6 @@ import {
   CountryCodes,
   CountryList,
 } from "../helpers/localeMaping.js";
-import TokenGenerator from "../components/TokenGenerator.jsx";
 
 export const McToolsContext = createContext({
   compareLocales: {},
@@ -33,7 +32,6 @@ export const McToolsContext = createContext({
   handleGetUrlGenerator: () => {},
   handleGetUrlGeneratorOnFocus: () => {},
   setUrlGeneratorVisited: () => {},
-  handleSelectTokenQueryType: () => {},
 });
 
 export default function McToolsContextProvider({ children }) {
@@ -85,14 +83,6 @@ export default function McToolsContextProvider({ children }) {
       errorLocation: undefined,
       errorType: undefined,
     },
-    tokenGen: {
-      input: "",
-      type: "",
-      localeObj: {},
-      isError: false,
-      errorLocation: undefined,
-      errorType: undefined,
-    },
     isToolTip: false,
     toolTip: "",
     errorType: undefined,
@@ -125,9 +115,9 @@ export default function McToolsContextProvider({ children }) {
   function handleCompareLocaleChange(e) {
     const arrayName = e.target.name;
     const value = e.target.value;
-    // console.log(`handleCompareLocaleChange firing and value =`, value);
+    console.log(`handleCompareLocaleChange firing and value =`, value);
     const newArray = value === "" ? [] : value.replace(/\s+/g, "").split(",");
-    // console.log(`handleCompareLocaleChange firing and newArray =`, newArray);
+    console.log(`handleCompareLocaleChange firing and newArray =`, newArray);
     setMasterTools((prevState) => {
       return {
         ...prevState,
@@ -148,7 +138,7 @@ export default function McToolsContextProvider({ children }) {
     const AlsoInBoth = [];
     const inTwoNotOne = [];
     if (!firstInput.length && !secondInput.length) {
-      // console.log(`no first or second input.length`);
+      console.log(`no first or second input.length`);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -162,7 +152,7 @@ export default function McToolsContextProvider({ children }) {
         };
       });
     } else if (!firstInput.length) {
-      // console.log(`no first input.length`);
+      console.log(`no first input.length`);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -176,7 +166,7 @@ export default function McToolsContextProvider({ children }) {
         };
       });
     } else if (!secondInput.length) {
-      // console.log(`no second input.length`);
+      console.log(`no second input.length`);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -315,7 +305,6 @@ export default function McToolsContextProvider({ children }) {
             .replace(/\n*$/, "") // remove trailing newline from end
             .replace(/,\s*$/, "") //  remove trailing comma and/or followed by whitespace from end
             .replace(/\t/g, ",") // replace tabs with comma
-            .replace(/(\r?\n){3,}/g, ", region\n") // testing
             .replace(/\n+/g, ",") // replace one or more newline characters with comma
             .split(",") // create new array
         : value
@@ -331,7 +320,7 @@ export default function McToolsContextProvider({ children }) {
         return acc;
       }, []);
       if (falseIndexes?.length === newArr?.length) {
-        // console.log(`in noValidLocales`);
+        console.log(`in noValidLocales`);
         setMasterTools((prevState) => {
           return {
             ...prevState,
@@ -344,7 +333,7 @@ export default function McToolsContextProvider({ children }) {
           };
         });
       } else {
-        // console.log(`looking good?`);
+        console.log(`looking good?`);
         setMasterTools((prevState) => {
           return {
             ...prevState,
@@ -381,11 +370,11 @@ export default function McToolsContextProvider({ children }) {
   }
 
   function handleGetLocaleGeneratorList() {
-    // console.log(`handleGetLocaleGeneratorList firing`);
+    console.log(`handleGetLocaleGeneratorList firing`);
     const len1 = masterTools.localeList.firstInputArr.length;
     const len2 = masterTools.localeList.secondInputArr.length;
     if (len1 === 0 || len2 === 0) {
-      // console.log(`generateList error -  not equal`);
+      console.log(`generateList error -  not equal`);
       const errorLocation =
         len1 === 0 && len2 === 0
           ? "BOTH"
@@ -404,7 +393,7 @@ export default function McToolsContextProvider({ children }) {
         };
       });
     } else if (len1 === len2) {
-      // console.log(`localeList array lengths ==`);
+      console.log(`localeList array lengths ==`);
       const indexArr = [];
       masterTools.localeList.secondInputArr.map((indicator, i) => {
         if (indicator === "") {
@@ -417,27 +406,23 @@ export default function McToolsContextProvider({ children }) {
         },
       );
       setMasterTools((prevState) => {
-        // console.log(`localeList GTG & localeArray =`, localeArray);
+        console.log(`localeList GTG & localeArray =`, localeArray);
         return {
           ...prevState,
           localeList: {
             ...prevState.localeList,
             localesWithContentArr: [...localeArray],
             isLocaleListGenerate: true,
-            isError: false,
-            errorType: undefined,
-            errorLocation: undefined,
           },
         };
       });
     } else {
-      // console.log(`error - numbers don't match`);
+      console.log(`error - numbers don't match`);
       setMasterTools((prevState) => {
         return {
           ...prevState,
           localeList: {
             ...prevState.localeList,
-            isLocaleListGenerate: false,
             isError: true,
             errorType: "localeListInputNotEqual",
             errorLocation: "BOTH",
@@ -452,10 +437,10 @@ export default function McToolsContextProvider({ children }) {
     const value = e.target.value;
     const target = e.target.dataset.type;
     const newValue = value === "" ? [] : value.split(", ");
-    // console.log(`handleLocaleGeneratorOnChange firing`);
-    // console.log(`value = ${value}`);
-    // console.log(`target = ${target}`);
-    // console.log(`newValue = ${newValue}`);
+    console.log(`handleLocaleGeneratorOnChange firing`);
+    console.log(`value = ${value}`);
+    console.log(`target = ${target}`);
+    console.log(`newValue = ${newValue}`);
     setMasterTools((prevState) => {
       return {
         ...prevState,
@@ -492,7 +477,7 @@ export default function McToolsContextProvider({ children }) {
           },
         };
       } else {
-        // console.log(`clean onFocus`);
+        console.log(`clean onFocus`);
         return {
           ...prevState,
           localeList: {
@@ -508,9 +493,9 @@ export default function McToolsContextProvider({ children }) {
   }
 
   function handleResetLocaleGeneratorListInput() {
-    // console.log(`handleResetLocaleGeneratorListInput firing`);
+    console.log(`handleResetLocaleGeneratorListInput firing`);
     setMasterTools((prevState) => {
-      // console.log(`handleResetLocaleGeneratorListInput firing`);
+      console.log(`handleResetLocaleGeneratorListInput firing`);
       return {
         ...prevState,
         errorType: undefined,
@@ -543,7 +528,7 @@ export default function McToolsContextProvider({ children }) {
 
   function handleGetCountryCodeOnChange(e) {
     const value = e.target.value;
-    // console.log(`handleCountryCodeOnChange firing with value`, value);
+    console.log(`handleCountryCodeOnChange firing with value`, value);
     setMasterTools((prevState) => {
       return {
         ...prevState,
@@ -563,7 +548,7 @@ export default function McToolsContextProvider({ children }) {
 
     if (value === undefined) {
       // checks for bad or no input
-      // console.log(`value undefined`);
+      console.log(`value undefined`);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -575,7 +560,7 @@ export default function McToolsContextProvider({ children }) {
         };
       });
     } else if (!valid) {
-      // console.log(`value not noncharacter`);
+      console.log(`value not noncharacter`);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -589,7 +574,7 @@ export default function McToolsContextProvider({ children }) {
     } else {
       // input is good and check for length and result
       if (value?.length < 2) {
-        // console.log(`value short`);
+        console.log(`value short`);
         setMasterTools((prevState) => {
           return {
             ...prevState,
@@ -677,7 +662,7 @@ export default function McToolsContextProvider({ children }) {
     }
   }
   function handleGetCountryCodeOnFocus() {
-    // console.log(`handleGetCountryCodeOnFocus firing`);
+    console.log(`handleGetCountryCodeOnFocus firing`);
     setMasterTools((prevState) => {
       return {
         ...prevState,
@@ -699,10 +684,10 @@ export default function McToolsContextProvider({ children }) {
   function handleUrlGeneratorOnChange(e) {
     const value = e.target.value;
     const type = e.target.dataset.type;
-    // console.log(
-    //   `handleUrlGeneratorOnChange firing with value = ${type} & ${value}`,
-    //   e.target,
-    // );
+    console.log(
+      `handleUrlGeneratorOnChange firing with value = ${type} & ${value}`,
+      e.target,
+    );
     if (type === "URL") {
       setMasterTools((prevState) => {
         return {
@@ -720,7 +705,7 @@ export default function McToolsContextProvider({ children }) {
         .replace(/,\s*$/, "")
         .split(",");
       const trimmedArr = value === "" ? [] : newArr.map((item) => item.trim());
-      // console.log(`trimmedArr =`, trimmedArr);
+      console.log(`trimmedArr =`, trimmedArr);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -738,7 +723,6 @@ export default function McToolsContextProvider({ children }) {
   function handleGetUrlGenerator() {
     const localesArr = [...masterTools.urlGen.trimmedArr];
     function urlTest(url) {
-      if (!url.startsWith("http")) url = "http://" + url;
       try {
         new URL(url);
         return true;
@@ -758,14 +742,11 @@ export default function McToolsContextProvider({ children }) {
 
     if (isValidUrl && !hasError) {
       const urlParams = [...CountryList];
-      const url = !masterTools.urlGen.url.startsWith("http")
-        ? "https://" + masterTools.urlGen.url
-        : masterTools.urlGen.url;
-      const formatedUrl = new URL(url);
-      const protocol = formatedUrl.protocol;
-      const hostname = formatedUrl.hostname;
-      const pathname = formatedUrl.pathname;
-      const param = formatedUrl.search;
+      const url = new URL(masterTools.urlGen.url);
+      const protocol = url.protocol;
+      const hostname = url.hostname;
+      const pathname = url.pathname;
+      const param = url.search;
       const testingUrls = [];
       localesArr.map((locale, i) => {
         const index = LocaleList.indexOf(locale);
@@ -808,9 +789,9 @@ export default function McToolsContextProvider({ children }) {
   }
 
   function handleGetUrlGeneratorOnFocus(e) {
-    // console.log(`handleGetCountryCodeOnFocus firing`);
+    console.log(`handleGetCountryCodeOnFocus firing`);
     const location = e.target.dataset.type;
-    // console.log(`location clicked = ${location}`);
+    console.log(`location clicked = ${location}`);
     setMasterTools((prevState) => {
       const prevLocation = prevState.urlGen.errorLocation;
       const errorLocation =
@@ -848,9 +829,9 @@ export default function McToolsContextProvider({ children }) {
       //       ? true
       //       : false;
       // const hasError = prevLocation === "BOTH" ? true : false;
-      // console.log(`prevLocation = ${prevLocation}`);
-      // console.log(`errorLocation = ${errorLocation}`);
-      // console.log(`hasError = ${hasError}`);
+      console.log(`prevLocation = ${prevLocation}`);
+      console.log(`errorLocation = ${errorLocation}`);
+      console.log(`hasError = ${hasError}`);
       return {
         ...prevState,
         urlGen: {
@@ -877,31 +858,11 @@ export default function McToolsContextProvider({ children }) {
     });
   }
 
-  // #####
-  // ##  TokenGenerator
-  // #####
-
-  function handleSelectTokenQueryType(e) {
-    //const type = e.target.dataset;
-    const type = e.target.name;
-    console.log(`my type is`, type);
-    setMasterTools((prevState) => {
-      return {
-        ...prevState,
-        tokenGen: {
-          ...prevState.tokenGen,
-          type: type,
-        },
-      };
-    });
-  }
-
   const ctxValue = {
     compareLocales: masterTools.compareLocales,
     localeList: masterTools.localeList,
     countryCode: masterTools.countryCode,
     urlGen: masterTools.urlGen,
-    tokenGen: masterTools.tokenGen,
     toolTip: masterTools.toolTip,
     isToolTip: masterTools.isToolTip,
     errorType: masterTools.errorType,
@@ -924,7 +885,6 @@ export default function McToolsContextProvider({ children }) {
     handleGetUrlGenerator: handleGetUrlGenerator,
     handleGetUrlGeneratorOnFocus: handleGetUrlGeneratorOnFocus,
     setUrlGeneratorVisited: setUrlGeneratorVisited,
-    handleSelectTokenQueryType: handleSelectTokenQueryType,
   };
 
   return (

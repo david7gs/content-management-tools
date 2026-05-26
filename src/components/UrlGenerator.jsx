@@ -42,8 +42,8 @@ export default function UrlGenerator() {
         <div className="slide-in__description">
           <h3>Generate a list of URLs</h3>
           <p>
-            Enter your preview URL and a list of locales to generate a list of
-            clickable URLs to test content authoring
+            Enter a URL and a list of locales to generate clickable links for
+            testing your content.
           </p>
         </div>
         <div className="input-col">

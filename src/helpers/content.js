@@ -2,9 +2,9 @@ export const Content = [
   {
     type: "COMPARE_LOCALE",
     desc: [
-      "This is a great tool when you need to compare and identify differences between two lists of locales. For example, you can use this tool to check for updates made in a content matrix against a previous version of the content matrix, or to compare the list of locales supported by a product against the list of locales in scope for a project.",
-      "Below are some examples of the type of content you can enter into this tool.",
-      "Your lists should be in the format of a comma deliminated list of locales in the format of language code + underscore + country code - ex: en_CA, es_ES, pt_BR",
+      "This tool is ideal for finding differences between two locale lists. For example, you can use it to check what changed between two versions of a content matrix, or to compare a product's supported locales against the locales in scope for a project.",
+      "Here are some examples of what you can enter into this tool.",
+      "Format your lists as a comma-separated list using the language code + underscore + country code format -- for example: en_CA, es_ES, pt_BR",
     ],
     isExample: true,
     example: {
@@ -17,14 +17,13 @@ export const Content = [
   {
     type: "LOCALE_LIST_GENERATOR",
     desc: [
-      "This tool extracts a list of in-scope locales from a content matrix, which is typically shared as a spreadsheet. The matrix should include a column of locales and one or more content flag columns indicating whether each locale should receive the content associated with that column.",
+      "This tool pulls the relevant locales from a content matrix, which is usually shared as a spreadsheet. The matrix needs a column of locales and at least one content flag column that marks whether each locale should receive the associated content.",
       "How to use this tool:",
-      "Make a copy of the Matrix and store it in your personal Quip space - removing any rows that do not have locales in them. These are typically rows seperating country tiers (ex: Tier 2).",
-      "Copy the column containing the locales (for example: en_US, en_CA, es_MX, etc.) and paste it into the Locales input field.",
-      "Copy the content flag column corresponding to the content update you want to evaluate and paste it into the Content Flags input field.",
-      "Click Generate List to produce the list of locales that are in scope for the selected content.",
-      "As you paste your data, a counter will appear for each input field showing the number of locales and content flags detected. When the counts match, the tool will generate the list of applicable locales.",
-      "For additional verification, the tool also returns a complete reference list of all locales alongside their corresponding content flags. This allows you to quickly review the data and confirm accuracy before using the results.",
+      "1. Copy the locale column (e.g., en_US, en_CA, es_MX) and paste it into the Locales field.",
+      "2. Copy the content indicator flag column for the content update you want to check and paste it into the Content indicator field.",
+      "3. Click Generate List to see which locales are in scope for the selected content.",
+      "As you paste your data, a counter will appear besides each field label showing how many locales and content indicator flags were detected. When the two counts match, the tool will generate your locale list.",
+      "The tool also returns a full reference list showing all locales alongside their content flags, so you can quickly review and confirm the results before using them.",
     ],
     // example: {
     //   firstString:
@@ -35,16 +34,42 @@ export const Content = [
   {
     type: "COUNTRY_CODE",
     desc: [
-      "When managing content across a large number of locales it can be challenging to remember all the corresonding country codes to input into a preview or production URL to test your content.",
-      "You may be presented with a request to update content from a list of country codes you don't know the corresponding locales for and have to look them up.",
-      "This tool allows you to quickly retieve a locale from a country code and visa versa.",
-      "",
+      // "When working with a large number of locales, it can be hard to remember every corresponding country code -- or to know which locale matches a given country code.",
+      // "This tool lets you quickly look up a locale from a country code, or a country code from a locale.",
+      // "Examples:",
+      // "Not sure what country code goes with de_CH? Enter it and click Generate -- the tool will return chde, which you can paste directly into your AEM URL.",
+      // "Given the country code lae (Latin America English) and need the locale? Enter it, click Generate, and the tool will return en_419 for use in your AEM URL field.",
+      // "",
+      "When working with a large number of locales, it can be hard to remember every corresponding country code -- or to know which locale matches a given country code.",
+      "This tool lets you quickly look up a locale from a country code, or a country code from a locale.",
     ],
     example: {
       firstString:
-        "If you are unsure of the correct country code for the 'de_CH' locale - entering it and selecting the generate button will give you 'chde'. You can copy and paste this into your AEM URL.",
+        // "If you are unsure of the correct country code for the 'de_CH' locale - entering it and selecting the generate button will give you 'chde'. You can copy and paste this into your AEM URL.",
+        "Not sure what country code goes with de_CH? Enter it and click Generate -- the tool will return chde, which you can paste directly into your AEM URL.",
       secondString:
-        "Or say you are given 'lae' (Latin America English) country code, put it into the input field, select Generate, and you will find that 'en_419' is the locale to enter into the AEM URL field.",
+        // "Or say you are given 'lae' (Latin America English) country code, put it into the input field, select Generate, and you will find that 'en_419' is the locale to enter into the AEM URL field."
+        "Given the country code lae (Latin America English) and need the locale? Enter it, click Generate, and the tool will return en_419 for use in your AEM URL field.",
     },
+  },
+  {
+    type: "LOCALE_LIST_GENERATOR_HELP",
+    desc: [
+      "There are a number of reasons why you may get this error. Copying data from spreadsheets can be tricky due to the nature of inconsistent formatting and hidden characters you cannot see but are nevertheless there in your data.",
+      "When using this tool the most common reason relates to the region separator rows and if the column with all the locales, has text in the region separator cell. If the cell is empty you may need to edit the spreadsheet and remove/delete the locale regional separator rows. It is recommended you make your own copy of the spreadsheet before making any edits.",
+      "The images below are examples of the locale regions separator rows to help identify when you will need to make a copy of the spreadsheet and remove the rows.",
+    ],
+    img: [
+      {
+        path: "./src/assets/img/working.png",
+        caption:
+          "This sheet will capture the data correctly. It has text in the locale column.",
+      },
+      {
+        path: "./src/assets/img/notWorking.png",
+        caption:
+          "This sheet will NOT capture the data correctly. It does Not have text in the locale column. In this case, either delete the row in black or enter some text in the blank cell highlighted in red and generate the list again.",
+      },
+    ],
   },
 ];
