@@ -4,7 +4,7 @@ import {
   CountryCodes,
   CountryList,
 } from "../helpers/localeMaping.js";
-import TokenGenerator from "../components/TokenGenerator.jsx";
+// import TokenGenerator from "../components/TokenGenerator.jsx";
 
 export const McToolsContext = createContext({
   compareLocales: {},

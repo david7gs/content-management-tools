@@ -1,0 +1,7 @@
+schemaVersion: 1.0
+project: cm-tools
+
+#
+# deployment:
+#  dir: dist/
+#

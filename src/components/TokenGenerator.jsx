@@ -1,32 +1,19 @@
 import { useContext, useState, useEffect, use } from "react";
 import { McToolsContext } from "../store/mcTools_context.jsx";
 import { OnEnterHook } from "../helpers/OnEnterHook.jsx";
-import { geoIApps } from "../helpers/geoIApps";
+import { GEO_API } from "../.env/.env_api.js";
+import { API_SWAP } from "../.env/.env_geo_api.js";
+//import { geoIApps } from "../helpers/geoIApps";
 import Input from "./Input";
-
-// Async function to fetch weather data
-// const fetchGeoApi = () => {
-//   console.log(`fetch firing`);
-//   const response = fetch("https://geo.iapps.apple.com");
-//   if (!response.ok) {
-//     throw new Error("Failed to fetch Geo API");
-//   }
-//   return response.json();
-// };
 
 export default function TokenGenerator() {
   const { tokenGen, handleSelectTokenQueryType } = useContext(McToolsContext);
-  // const data = { ...geoIApps };
-  // const DEFAULT_DATA = { ...tokenGen };
-  //const [geoData, setGeoData] = useState(null);
   const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://geo.iapps.apple.com");
+        const response = await fetch(GEO_API);
         // Handle HTTP errors (404, 500...)
         if (!response.ok) {
           throw new Error("Server responded with an error");
@@ -36,38 +23,22 @@ export default function TokenGenerator() {
       } catch (error) {
         // Handle network errors OR thrown HTTP errors
         console.error("Fetch failed, using default:", error.message);
-        setData(geoIApps); // Set your fallback here
-        //setHasError(true);
-      } finally {
-        setIsLoading(false);
+        setData(API_SWAP); // Set your fallback here
       }
+      // finally {
+      //   setIsLoading(false);
+      // }
     };
 
     fetchData();
   }, []);
+
   if (!data) return <p>Loading...</p>;
-  //if (isLoading) return <p>Loading API data...</p>;
-  // if (hasError) return <p>Error fetching API data</p>;
-
-  // const weather = use(fetchGeoApi());
-  // console.log(`??`, weather);
-
-  // Using for...of loop
-  //   const obj = { a: 5, b: 7, c: 9 };
-  //   for (const [key, value] of Object.entries(data)) {
-  //     // console.log(`${key} ${value}`);
-  //     console.log(value.isoCountryCode.toLowerCase());
-  //   }
 
   const targetCode = "fr_CA";
   const result = Object.values(data).find((item) => item.id === targetCode);
   console.log(`fetch data`, data);
   console.log(`target locale object`, result.urlPaths);
-
-  // Using array methods
-  //   Object.entries(data).forEach(([key, value]) => {
-  //     console.log(`${key} ${value}`);
-  //   });
 
   return (
     <div className="locale-list slide-in">
