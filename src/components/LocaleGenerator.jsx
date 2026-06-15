@@ -58,11 +58,13 @@ export default function LocaleGenerator() {
         <div className="heading-wrap">
           <h4>Locales in scope ({data.localesWithContentArr?.length})</h4>
           <CopyButton
-            className={`copy-string`}
+            className="select copy-string"
             textToCopy={data.localesWithContentArr.join(", ")}
           />
         </div>
-        {data.localesWithContentArr?.join(", ")}
+        <div className="compare-wrap__locales">
+          {data.localesWithContentArr?.join(", ")}
+        </div>
         <ul>
           Input map - visualy compare results with matrix
           {data.firstInputArr.map((locale, i) => {
@@ -106,7 +108,7 @@ export default function LocaleGenerator() {
             Quickly generate a list of locales for a given content update or
             variation.
             <button
-              className="tool-tip"
+              className="select tool-tip"
               title="See examples of content that can be entered in this tool"
               onClick={() => handleToolTipClick("LOCALE_LIST_GENERATOR")}
             >
@@ -188,13 +190,13 @@ export default function LocaleGenerator() {
             </div>
             <div className="seperator-button">
               <button
-                className="compare-button"
+                className="select compare-button"
                 onClick={handleGetLocaleGeneratorList}
               >
                 Generate list of locales in scope
               </button>
               <button
-                className="reset-button"
+                className="select reset-button"
                 onClick={handleResetLocaleGeneratorListInput}
               >
                 Reset input fields

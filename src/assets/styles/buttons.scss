@@ -1,0 +1,58 @@
+button {
+  border-radius: 6px;
+  // border: solid 1px;
+  padding: 5px;
+  background-color: #fff;
+  font-size: 0.85rem;
+  cursor: pointer;
+  &:hover {
+    // background-color: rgba(138, 154, 91, 0.5);
+    background-color: $button-hov;
+  }
+  &.active {
+    color: #fff;
+    background-color: #424242;
+  }
+  &.full-width {
+    width: 100%;
+  }
+  &.tool-tip {
+    border-radius: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    margin-left: 6px;
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
+    // font-size: 0.75rem;
+    // line-height: 1.5rem;
+  }
+  &.select {
+    // border: solid 1px;
+    border: 1px solid #c1c2c7;
+  }
+  &.token-select {
+    border: 0;
+    padding: 8px 0 8px 20px;
+    font-size: 0.85rem;
+    color: #fff;
+    background-color: #000;
+    border-radius: initial;
+    width: 25%;
+    min-width: 125px;
+    text-align: left;
+    &.active {
+      background-color: $button-hov;
+      color: #000;
+      border-right: solid 2px gray;
+    }
+  }
+  &.drk {
+    background-color: $g200;
+    &:hover {
+      background-color: $hoverDrk;
+      color: #ffffff;
+    }
+  }
+}

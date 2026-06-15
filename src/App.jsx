@@ -44,6 +44,10 @@ export default function App() {
               <strong>URL Generator</strong> - Create a list of localized links
               using a URL and a locale list
             </li>
+            <li>
+              <strong>Token Generator</strong> - Generate a URL token that can
+              be copied and pasted into a URL CF
+            </li>
           </ol>
           <div className="function-selector">
             <button

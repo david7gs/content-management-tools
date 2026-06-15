@@ -15,10 +15,12 @@ export default function Input({
   rows,
   cols,
   onChange,
+  onClick,
   handlePaste,
   handleClick,
   onFocus,
   disable,
+  readOnly,
   updateValues,
   children,
 }) {
@@ -37,6 +39,7 @@ export default function Input({
         value={value}
         placeholder={placeholder}
         disabled={disable}
+        readOnly={readOnly}
         // onClick={handleClick}
         onFocus={onFocus}
         // ref={ref}
@@ -52,9 +55,12 @@ export default function Input({
         value={value}
         maxLength={maxLength}
         onChange={onChange}
+        onClick={onClick}
         onPaste={handlePaste}
         disabled={disable}
+        readOnly={readOnly}
         autoComplete={`off`}
+        placeholder={placeholder}
         // ref={ref}
         // onClick={handleClick}
         onFocus={onFocus}

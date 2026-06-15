@@ -1,5 +1,6 @@
 import { useRef, useEffect, useContext } from "react";
 import { McToolsContext } from "../store/mcTools_context.jsx";
+import { OnEnterHook } from "../helpers/OnEnterHook.jsx";
 import Input from "./Input";
 
 export default function UrlGenerator() {
@@ -15,6 +16,8 @@ export default function UrlGenerator() {
   const data = { ...urlGen };
 
   const scrollTo = useRef(null);
+
+  OnEnterHook(handleGetUrlGenerator);
 
   useEffect(() => {
     if (scrollTo.current) {
@@ -89,7 +92,7 @@ export default function UrlGenerator() {
             {errorLocaleField && `Please enter a valid list of locales`}
           </div>
         </div>
-        <button className={`full-width`} onClick={handleGetUrlGenerator}>
+        <button className="select full-width" onClick={handleGetUrlGenerator}>
           Generate URL list
         </button>
       </div>
@@ -97,7 +100,7 @@ export default function UrlGenerator() {
         <div className="preview-list">
           <h4>List of generated preview URLs</h4>
           <div className="list-wrap">
-            <ul ref={scrollTo}>
+            <ul className="list-wrap__urlLinks" ref={scrollTo}>
               {data.urlArr.map((url, i) => {
                 const c = data;
                 const classes = data.isVisited.includes(i)

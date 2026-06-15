@@ -2,9 +2,32 @@
   box-sizing: border-box;
 }
 
+// button
+button {
+  background: transparent;
+  color: inherit;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
 // List
+ol,
 ul {
-  list-style: none;
+  li {
+    // margin-bottom: 6px;
+    padding: 0;
+    text-indent: 0;
+    list-style: none;
+    list-style-type: 0;
+  }
 }
 
 // Form
@@ -15,7 +38,6 @@ select {
 }
 
 // removes ios defaults
-button,
 input[type="button"],
 input[type="submit"] {
   -webkit-appearance: none;

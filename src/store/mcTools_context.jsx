@@ -1,4 +1,6 @@
-import { useState, createContext } from "react";
+import { useState, createContext, useEffect } from "react";
+import { GEO_API } from "../.env/.env_api.js";
+import { API_SWAP } from "../.env/.env_geo_api.js";
 import {
   LocaleList,
   CountryCodes,
@@ -14,6 +16,7 @@ export const McToolsContext = createContext({
   toolTip: "",
   isToolTip: false,
   errorType: "",
+  geoInfo: {},
   handleToolTipClick: () => {},
   handleToolTipClose: () => {},
   handleCompareLocaleChange: () => {},
@@ -29,11 +32,17 @@ export const McToolsContext = createContext({
   handleGetCountryCodeOnChange: () => {},
   handleGetCountryCode: () => {},
   handleGetCountryCodeOnFocus: () => {},
+  handleCountryCodeLocaleSelect: () => {},
   handleUrlGeneratorOnChange: () => {},
   handleGetUrlGenerator: () => {},
   handleGetUrlGeneratorOnFocus: () => {},
   setUrlGeneratorVisited: () => {},
-  handleSelectTokenQueryType: () => {},
+  handleTokenGeneratorOnChange: () => {},
+  handleTokenGeneratorOnFocus: () => {},
+  getLocaleOrCountryType: () => {},
+  handleTokenGenLocaleSelect: () => {},
+  handleTokenSelect: () => {},
+  handleTokenGenChange: () => {},
 });
 
 export default function McToolsContextProvider({ children }) {
@@ -64,13 +73,16 @@ export default function McToolsContextProvider({ children }) {
       errorLocation: undefined,
     },
     countryCode: {
-      value: undefined,
-      input: undefined,
+      input: "",
+      target: undefined,
+      value: "",
       result: undefined,
       isValid: undefined,
       resultType: undefined,
       showResult: false,
       isError: false,
+      countryArr: [],
+      multiLanguage: [],
     },
     urlGen: {
       url: "",
@@ -86,17 +98,89 @@ export default function McToolsContextProvider({ children }) {
       errorType: undefined,
     },
     tokenGen: {
-      input: "",
+      getLocaleOrCountryType: "",
       type: "",
       localeObj: {},
+      countryArr: [],
+      multiLanguage: [],
+      target: undefined,
+      token: {},
+      // TODO : clean up isError and isValid
       isError: false,
-      errorLocation: undefined,
       errorType: undefined,
+      isValid: false,
+      resultType: undefined,
+      // errorLocation: undefined,
+      showResult: undefined,
     },
+    isLoading: true,
+    error: false,
     isToolTip: false,
     toolTip: "",
     errorType: undefined,
+    geoInfo: {},
   });
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(GEO_API);
+      // Handle HTTP errors (404, 500...)
+      if (!response.ok) {
+        throw new Error("Server responded with an error");
+      }
+      const data = await response.json();
+      setMasterTools((prevState) => {
+        return {
+          ...prevState,
+          geoInfo: { ...data },
+          isLoading: false,
+        };
+      });
+      //setData(data);
+    } catch (error) {
+      // Handle network errors OR thrown HTTP errors
+      console.error("Fetch failed, using default:", error.message);
+      setMasterTools((prevState) => {
+        return {
+          ...prevState,
+          geoInfo: { ...data },
+          isLoading: false,
+        };
+      });
+      //setData(API_SWAP); // Set your fallback here
+    } finally {
+      setMasterTools((prevState) => {
+        return {
+          ...prevState,
+          isLoading: false,
+        };
+      });
+      // setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // const fetchData = async () => {
+    //   try {
+    //     const response = await fetch(GEO_API);
+    //     // Handle HTTP errors (404, 500...)
+    //     if (!response.ok) {
+    //       throw new Error("Server responded with an error");
+    //     }
+    //     const data = await response.json();
+    //     setData(data);
+    //   } catch (error) {
+    //     // Handle network errors OR thrown HTTP errors
+    //     console.error("Fetch failed, using default:", error.message);
+    //     setData(API_SWAP); // Set your fallback here
+    //   }
+    //   // finally {
+    //   //   setIsLoading(false);
+    //   // }
+    // };
+
+    fetchData();
+  }, []);
 
   function handleToolTipClick(type) {
     setMasterTools((prevState) => {
@@ -492,15 +576,10 @@ export default function McToolsContextProvider({ children }) {
           },
         };
       } else {
-        // console.log(`clean onFocus`);
         return {
           ...prevState,
           localeList: {
             ...prevState.localeList,
-            // isLocaleListGenerate: false,
-            // isError: false,
-            // errorLocation: undefined,
-            // errorType: undefined,
           },
         };
       }
@@ -508,9 +587,7 @@ export default function McToolsContextProvider({ children }) {
   }
 
   function handleResetLocaleGeneratorListInput() {
-    // console.log(`handleResetLocaleGeneratorListInput firing`);
     setMasterTools((prevState) => {
-      // console.log(`handleResetLocaleGeneratorListInput firing`);
       return {
         ...prevState,
         errorType: undefined,
@@ -543,27 +620,38 @@ export default function McToolsContextProvider({ children }) {
 
   function handleGetCountryCodeOnChange(e) {
     const value = e.target.value;
-    // console.log(`handleCountryCodeOnChange firing with value`, value);
+    console.log(`handleGetCountryCodeOnChange firing and value =`, value);
     setMasterTools((prevState) => {
       return {
         ...prevState,
         countryCode: {
           ...prevState.countryCode,
-          value: value,
+          input: value,
+          // value: value,
         },
       };
     });
   }
-
+  // #HERE
   function handleGetCountryCode() {
+    // TODO - Make this a function, put in helper file, and import
     const exp = new RegExp(/^[a-zA-Z0-9_-]+$/);
-    const value = masterTools.countryCode.value;
+    const value = masterTools.countryCode.input;
     console.log(`handleGetCountryCode and value =`, value);
     const valid = exp.test(value);
+    const isLocale = value?.includes("_");
+    const search = isLocale ? `id` : `isoCountryCode`;
+
+    const countryArr = Object.values(masterTools.geoInfo).filter(
+      (locale) =>
+        locale[search].toLowerCase() ===
+        masterTools.countryCode.input?.toLowerCase(),
+    );
+    console.log(`1 countryArr =`, countryArr);
 
     if (value === undefined) {
       // checks for bad or no input
-      // console.log(`value undefined`);
+      console.log(`value undefined`);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -575,7 +663,7 @@ export default function McToolsContextProvider({ children }) {
         };
       });
     } else if (!valid) {
-      // console.log(`value not noncharacter`);
+      console.log(`value not noncharacter`);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -588,8 +676,9 @@ export default function McToolsContextProvider({ children }) {
       });
     } else {
       // input is good and check for length and result
+      console.log(`value is valid input`);
       if (value?.length < 2) {
-        // console.log(`value short`);
+        console.log(`value short`);
         setMasterTools((prevState) => {
           return {
             ...prevState,
@@ -601,6 +690,7 @@ export default function McToolsContextProvider({ children }) {
           };
         });
       } else if (value?.length > 6) {
+        console.log(`value too long`);
         setMasterTools((prevState) => {
           return {
             ...prevState,
@@ -612,29 +702,36 @@ export default function McToolsContextProvider({ children }) {
           };
         });
       } else {
-        // input length is good
-        const isLocale = value?.includes("_");
+        console.log(`input is good`);
         if (isLocale) {
+          console.log(`input is a locale`);
           const index = Locales.indexOf(value.toLowerCase());
           if (index < 0) {
+            console.log(`input is a locale and no match`);
             setMasterTools((prevState) => {
               return {
                 ...prevState,
                 countryCode: {
                   ...prevState.countryCode,
+                  // TODO add isErrro and use - not isValid - change logic in component too
                   isValid: true,
                   resultType: "LOCALENOTFOUND",
                   showResult: true,
+                  result: undefined,
                 },
               };
             });
           } else {
+            // #HERE ##########
             const countryCode = CountryCodes[index];
+            console.log(`input is a locale and match found found`);
+            console.log(`I have countryArr[0] =`, countryArr[0]);
             setMasterTools((prevState) => {
               return {
                 ...prevState,
                 countryCode: {
                   ...prevState.countryCode,
+                  target: countryArr[0],
                   result: countryCode,
                   isValid: true,
                   resultType: "COUNTRYCODE",
@@ -644,45 +741,94 @@ export default function McToolsContextProvider({ children }) {
             });
           }
         } else {
+          console.log(`input is good and a country code`);
+          console.log(`my countries list`, Countries);
+          console.log(`value =`, value);
           const index = Countries.indexOf(value?.toLowerCase());
-          if (index < 0) {
+          console.log(`index =`, index);
+          if (countryArr?.length <= 0) {
+            console.log(`input is a country and no match found`);
             setMasterTools((prevState) => {
               return {
                 ...prevState,
                 countryCode: {
                   ...prevState.countryCode,
+                  // isError: true, TODO move to using isError?
                   isValid: true,
                   resultType: "COUNTRYNOTFOUND",
                   showResult: true,
+                  result: undefined,
                 },
               };
             });
           } else {
-            const locale = LocaleList[index];
-            setMasterTools((prevState) => {
-              return {
-                ...prevState,
-                countryCode: {
-                  ...prevState.countryCode,
-                  result: locale,
-                  isValid: true,
-                  resultType: "LOCALECODE",
-                  showResult: true,
-                },
-              };
-            });
+            console.log(`input is a country and match found`);
+            console.log(`countryArr =`, countryArr);
+            const locale = LocaleList[index]; // TODO use input not value
+            if (countryArr?.length > 1) {
+              console.log(`multilanguage country`);
+              console.log(`countryArr.length =`, countryArr?.length);
+              setMasterTools((prevState) => {
+                return {
+                  ...prevState,
+                  countryCode: {
+                    ...prevState.countryCode,
+                    multiLanguage: [...countryArr],
+                    showResult: false,
+                    resultType: "MULTILOCALE",
+                  },
+                };
+              });
+            } else {
+              setMasterTools((prevState) => {
+                return {
+                  ...prevState,
+                  countryCode: {
+                    ...prevState.countryCode,
+                    //result: locale,
+                    target: countryArr[0],
+                    result: Object.values(countryArr[0])[0],
+                    isValid: true,
+                    showResult: true,
+                    resultType: "LOCALECODE",
+                  },
+                };
+              });
+            }
           }
         }
       }
     }
   }
+
+  function handleCountryCodeLocaleSelect(e) {
+    console.log(`handleCountryCodeLocaleSelect firing`);
+    const target = e.target.name;
+    const data = masterTools.countryCode.multiLanguage?.find(
+      (locale) => locale.id === target,
+    );
+    setMasterTools((prevState) => {
+      return {
+        ...prevState,
+        countryCode: {
+          ...prevState.countryCode,
+          target: data,
+          result: target,
+          isValid: true,
+          resultType: "LOCALECODE",
+          showResult: true,
+        },
+      };
+    });
+  }
+
   function handleGetCountryCodeOnFocus() {
     // console.log(`handleGetCountryCodeOnFocus firing`);
     setMasterTools((prevState) => {
       return {
         ...prevState,
         countryCode: {
-          value: undefined,
+          input: "",
           isValid: undefined,
           resultType: undefined,
           showResult: false,
@@ -699,10 +845,6 @@ export default function McToolsContextProvider({ children }) {
   function handleUrlGeneratorOnChange(e) {
     const value = e.target.value;
     const type = e.target.dataset.type;
-    // console.log(
-    //   `handleUrlGeneratorOnChange firing with value = ${type} & ${value}`,
-    //   e.target,
-    // );
     if (type === "URL") {
       setMasterTools((prevState) => {
         return {
@@ -821,43 +963,18 @@ export default function McToolsContextProvider({ children }) {
           : prevLocation === location
             ? undefined
             : prevLocation;
-      // const hasError =
-      //   prevLocation === "BOTH"
-      //     ? location === "URL"
-      //       ? "LOCALE"
-      //       : "URL"
-      //     : location === "LOCALE"
-      //       ? location === prevLocation
-      //         ? false
-      //         : true
-      //       : location === "URL"
-      //         ? location === prevLocation
-      //           ? false
-      //           : true
-      //         : true;
       const hasError =
         prevLocation === "BOTH"
           ? true
           : prevLocation === location
             ? false
             : true;
-      // const hasError =
-      //   prevLocation === location
-      //     ? false
-      //     : prevLocation === "BOTH"
-      //       ? true
-      //       : false;
-      // const hasError = prevLocation === "BOTH" ? true : false;
-      // console.log(`prevLocation = ${prevLocation}`);
-      // console.log(`errorLocation = ${errorLocation}`);
-      // console.log(`hasError = ${hasError}`);
       return {
         ...prevState,
         urlGen: {
           ...prevState.urlGen,
           isError: hasError,
           errorLocation: errorLocation,
-          //errorType: undefined,
         },
       };
     });
@@ -881,16 +998,252 @@ export default function McToolsContextProvider({ children }) {
   // ##  TokenGenerator
   // #####
 
-  function handleSelectTokenQueryType(e) {
-    //const type = e.target.dataset;
-    const type = e.target.name;
-    console.log(`my type is`, type);
+  function handleTokenGeneratorOnChange(e) {
+    const value = e.target.value === "" ? undefined : e.target.value;
+    console.log(`handleTokenGeneratorOnChange firing and value =`, value);
     setMasterTools((prevState) => {
       return {
         ...prevState,
         tokenGen: {
           ...prevState.tokenGen,
-          type: type,
+          input: value,
+        },
+      };
+    });
+  }
+
+  function handleTokenGeneratorOnFocus() {
+    setMasterTools((prevState) => {
+      return {
+        ...prevState,
+        tokenGen: {
+          ...prevState.tokenGen,
+          // value: undefined,
+          multiLanguage: [],
+          errorType: undefined,
+          isValid: undefined,
+          resultType: undefined,
+          showResult: false,
+          isError: false,
+        },
+      };
+    });
+  }
+
+  function getLocaleOrCountryType() {
+    const value = masterTools.tokenGen.input;
+    console.log(`getLocaleOrCountryType firing and input =`, value);
+
+    // TODO - Make this a function, put in helper file, and import
+    const exp = new RegExp(/^[a-zA-Z0-9_-]+$/);
+    const valid = exp.test(value);
+    const isLocale = value?.includes("_");
+    const search = isLocale ? `id` : `isoCountryCode`;
+
+    const countryArr = Object.values(masterTools.geoInfo).filter(
+      (locale) =>
+        locale[search].toLowerCase() ===
+        masterTools.tokenGen.input.toLowerCase(),
+    );
+    console.log(`1 countryArr =`, countryArr);
+
+    if (value === undefined) {
+      // checks for bad or no input
+      console.log(`value undefined`);
+      setMasterTools((prevState) => {
+        return {
+          ...prevState,
+          tokenGen: {
+            ...prevState.tokenGen,
+            isError: true,
+            // errorLocation: undefined,
+            errorType: "EMPTY",
+            isValid: false,
+            showResult: false,
+          },
+        };
+      });
+    } else if (!valid) {
+      setMasterTools((prevState) => {
+        return {
+          ...prevState,
+          tokenGen: {
+            ...prevState.tokenGen,
+            isError: true,
+            errorLocation: undefined,
+            errorType: "NONCHARACTER",
+            isValid: false,
+            showResult: false,
+          },
+        };
+      });
+    } else {
+      // input is good and check for length and result
+      if (value?.length < 2) {
+        setMasterTools((prevState) => {
+          return {
+            ...prevState,
+            tokenGen: {
+              ...prevState.tokenGen,
+              isError: true,
+              errorLocation: undefined,
+              errorType: "SHORT",
+              isValid: false,
+              showResult: false,
+            },
+          };
+        });
+      } else if (value?.length > 6) {
+        setMasterTools((prevState) => {
+          return {
+            ...prevState,
+            tokenGen: {
+              ...prevState.tokenGen,
+              isError: true,
+              errorLocation: undefined,
+              errorType: "LONG",
+              isValid: false,
+              showResult: false,
+            },
+          };
+        });
+      } else {
+        console.log(`input is good`);
+        if (isLocale) {
+          console.log(`input is a locale`);
+          const index = Locales.indexOf(value.toLowerCase());
+          if (index < 0) {
+            setMasterTools((prevState) => {
+              return {
+                ...prevState,
+                tokenGen: {
+                  ...prevState.tokenGen,
+                  isError: true,
+                  errorLocation: undefined,
+                  errorType: "LOCALENOTFOUND",
+                  isValid: false,
+                  showResult: false,
+                },
+              };
+            });
+          } else {
+            // #HERE
+            console.log(`isLOCALE and locale found`);
+            console.log(`I have countryArr[0] =`, countryArr[0]);
+            const countryCode = CountryCodes[index];
+            setMasterTools((prevState) => {
+              return {
+                ...prevState,
+                tokenGen: {
+                  ...prevState.tokenGen,
+                  target: countryArr[0],
+                  isValid: true,
+                  showResult: true,
+                  resultType: "LOCALENOTFOUND",
+                },
+              };
+            });
+          }
+        } else {
+          console.log(`input is good and a country code`);
+          if (countryArr.length <= 0) {
+            setMasterTools((prevState) => {
+              return {
+                ...prevState,
+                tokenGen: {
+                  ...prevState.tokenGen,
+                  isError: true,
+                  errorLocation: undefined,
+                  errorType: "COUNTRYNOTFOUND",
+                },
+              };
+            });
+          } else {
+            if (countryArr.length > 1) {
+              setMasterTools((prevState) => {
+                return {
+                  ...prevState,
+                  tokenGen: {
+                    ...prevState.tokenGen,
+                    multiLanguage: [...countryArr],
+                    isError: false,
+                    errorType: undefined,
+                  },
+                };
+              });
+            } else {
+              setMasterTools((prevState) => {
+                return {
+                  ...prevState,
+                  tokenGen: {
+                    ...prevState.tokenGen,
+                    target: countryArr[0],
+                    isValid: true,
+                    showResult: true,
+                    resultType: "LOCALECODE",
+                    isError: false,
+                    errorType: undefined,
+                  },
+                };
+              });
+            }
+          }
+        }
+      }
+    }
+  }
+
+  function handleTokenGenLocaleSelect(e) {
+    const target = e.target.name;
+    const data = masterTools.tokenGen.multiLanguage.find(
+      (locale) => locale.id === target,
+    );
+    setMasterTools((prevState) => {
+      return {
+        ...prevState,
+        tokenGen: {
+          ...prevState.tokenGen,
+          target: data,
+          showResult: true,
+        },
+      };
+    });
+  }
+
+  function handleTokenSelect(e) {
+    const value = e.target.name;
+    const newValue = `$` + value + `/`;
+    const key = masterTools.tokenGen.target.urlPaths[value];
+    console.log(`my key value = ${key}`);
+    setMasterTools((prevState) => {
+      return {
+        ...prevState,
+        tokenGen: {
+          ...prevState.tokenGen,
+          token: { token: newValue, varTokenValue: newValue, key: key },
+        },
+      };
+    });
+  }
+
+  function handleTokenGenChange(e) {
+    console.log(`handleTokenGenChange firing`);
+    const value = e.target.value;
+    const newKeyValue = value.split("/").toSpliced(0, 1).join("/");
+    console.log(e.target);
+    console.log(value);
+    console.log(newKeyValue);
+    setMasterTools((prevState) => {
+      const newObj = { ...prevState.tokenGen.token.key, tokenValue: value };
+      return {
+        ...prevState,
+        tokenGen: {
+          ...prevState.tokenGen,
+          token: {
+            ...prevState.tokenGen.token,
+            varTokenValue: value,
+            extendKey: newKeyValue,
+          },
         },
       };
     });
@@ -905,6 +1258,7 @@ export default function McToolsContextProvider({ children }) {
     toolTip: masterTools.toolTip,
     isToolTip: masterTools.isToolTip,
     errorType: masterTools.errorType,
+    geoInfo: masterTools.geoInfo,
     handleToolTipClick: handleToolTipClick,
     handleToolTipClose: handleToolTipClose,
     handleLocaleGeneratorOnPaste: handleLocaleGeneratorOnPaste,
@@ -917,6 +1271,7 @@ export default function McToolsContextProvider({ children }) {
     handleCompareLocaleChange: handleCompareLocaleChange,
     handleGetCountryCodeOnChange: handleGetCountryCodeOnChange,
     handleGetCountryCodeOnFocus: handleGetCountryCodeOnFocus,
+    handleCountryCodeLocaleSelect: handleCountryCodeLocaleSelect,
     handleGetCompareLocales: handleGetCompareLocales,
     handleResetLocaleGeneratorListInput: handleResetLocaleGeneratorListInput,
     handleGetCountryCode: handleGetCountryCode,
@@ -924,7 +1279,12 @@ export default function McToolsContextProvider({ children }) {
     handleGetUrlGenerator: handleGetUrlGenerator,
     handleGetUrlGeneratorOnFocus: handleGetUrlGeneratorOnFocus,
     setUrlGeneratorVisited: setUrlGeneratorVisited,
-    handleSelectTokenQueryType: handleSelectTokenQueryType,
+    handleTokenGeneratorOnChange: handleTokenGeneratorOnChange,
+    handleTokenGeneratorOnFocus: handleTokenGeneratorOnFocus,
+    getLocaleOrCountryType: getLocaleOrCountryType,
+    handleTokenGenLocaleSelect: handleTokenGenLocaleSelect,
+    handleTokenSelect: handleTokenSelect,
+    handleTokenGenChange: handleTokenGenChange,
   };
 
   return (

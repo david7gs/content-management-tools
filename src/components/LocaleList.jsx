@@ -56,7 +56,7 @@ export default function LocaleList() {
           <p>
             Enter your locale lists below.{" "}
             <button
-              className="tool-tip"
+              className="select tool-tip"
               title="See examples of content that can be entered in this tool"
               onClick={() => handleToolTipClick("COMPARE_LOCALE")}
             >
@@ -91,7 +91,7 @@ export default function LocaleList() {
               placeholder="ex: en_AU, en_CA, fr_CA, es_CL, de_DE"
             />
             <button
-              className="locale-list__clear"
+              className="select"
               onClick={handleClearLocaleListInput}
               data-input="firstInput"
             >
@@ -128,7 +128,7 @@ export default function LocaleList() {
               placeholder="ex: en_AU, en_CA, fr_CA, es_CL, de_DE"
             />
             <button
-              className="locale-list__clear"
+              className="select"
               onClick={handleClearLocaleListInput}
               data-input="secondInput"
             >
@@ -141,10 +141,16 @@ export default function LocaleList() {
         </div>
 
         <div className="seperator-button">
-          <button className="compare-button" onClick={handleGetCompareLocales}>
+          <button
+            className="select compare-button"
+            onClick={handleGetCompareLocales}
+          >
             Compare
           </button>
-          <button className="reset-button" onClick={handleResetCompareLocales}>
+          <button
+            className="select reset-button"
+            onClick={handleResetCompareLocales}
+          >
             Reset Inputs
           </button>
           {data?.isComparisonGood && (
@@ -158,17 +164,23 @@ export default function LocaleList() {
             <div className="compare-wrap__label">
               Locales in both strings ({data.matchingLocales.length})
             </div>
-            <div>{data.matchingLocales.join(", ")}</div>
+            <div classNam="compare-wrap__result">
+              {data.matchingLocales.join(", ")}
+            </div>
             <div className="compare-wrap__label">
               Locales in field 1, BUT not in field 2 (
               {data.fieldOneNotTwo?.length})
             </div>
-            <div>{data.fieldOneNotTwo.join(", ")}</div>
+            <div classNam="compare-wrap__result">
+              {data.fieldOneNotTwo.join(", ")}
+            </div>
             <div className="compare-wrap__label">
               Locales in field 2, BUT not in field 1 (
               {data.fieldTwoNotOne?.length})
             </div>
-            <div>{data.fieldTwoNotOne.join(", ")}</div>
+            <div classNam="compare-wrap__result">
+              {data.fieldTwoNotOne.join(", ")}
+            </div>
           </div>
         )}
       </div>

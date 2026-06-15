@@ -44,7 +44,9 @@ export default function Modal({ children }) {
             </p>
           </div>
         )}
-        <button onClick={() => handleToolTipClose()}>Close</button>
+        <button className="drk" onClick={() => handleToolTipClose()}>
+          Close
+        </button>
       </div>
     </div>
   );
