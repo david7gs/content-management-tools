@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect, use } from "react";
 import { McToolsContext } from "../store/mcTools_context.jsx";
 import { OnEnterHook } from "../helpers/OnEnterHook.jsx";
+import { useKeyboardActions } from "../helpers/OnEnterHook.jsx";
 import { GEO_API } from "../.env/.env_api.js";
 import { API_SWAP } from "../.env/.env_geo_api.js";
 //import { geoIApps } from "../helpers/geoIApps";
@@ -19,19 +20,51 @@ export default function TokenGenerator() {
     handleTokenGenChange,
     // handleSelectTokenQueryType,
   } = useContext(McToolsContext);
+
+  function enterActions(e) {
+    if (e?.target.name === "en_CA") {
+      return "ggg";
+    }
+    if (e?.target.name === "fr_CA") {
+      return "FFF";
+    }
+  }
+  // usernameInput: (event) => {
+  //   console.log(
+  //     "Enter pressed in Username field. Value:",
+  //     event.target.value,
+  //   );
+  // },
+  // submitBtn: (event) => {
+  //   console.log("Enter pressed on the Submit Button!");
+  // },
+  // };
+  console.log(`my enterActions =`, enterActions());
   OnEnterHook(getLocaleOrCountryType);
+
+  // useKeyboardActions(
+  //   (event) => {
+  //     console.log("Enter pressed! event.target =", event.target);
+  //   },
+  //   (event) => {
+  //     event.preventDefault(); // Prevents focus from moving if needed
+  //     console.log("Tab pressed! event.target =", event.target);
+  //   },
+  // );
 
   const data = { ...tokenGen };
   const geo = { ...geoInfo };
   const isMultiLanguage = data.multiLanguage?.length > 1 ? true : false;
   const isTarget = data.target != undefined ? true : false;
-  console.log(`isMultiLanguage =`, isMultiLanguage);
-  console.log(`isTarget =`, isTarget);
+  // console.log(`isMultiLanguage =`, isMultiLanguage);
+  // console.log(`isTarget =`, isTarget);
 
   function CopyButton({ textToCopy, className }) {
     const [copied, setCopied] = useState(false);
 
     const handleCopy = async () => {
+      // console.log(`handleCopy firing`)
+      console.log(`handleCopy firing and textToCopy =`, textToCopy);
       if (!textToCopy) return;
       try {
         await navigator.clipboard.writeText(textToCopy);
@@ -41,7 +74,6 @@ export default function TokenGenerator() {
         console.error("Failed to copy text: ", err);
       }
     };
-
     return (
       <button className={className} onClick={handleCopy}>
         {copied ? "Copied!" : "Copy Token"}
@@ -126,19 +158,7 @@ export default function TokenGenerator() {
               </div>
               <div className="token-build">
                 <div>Your URL returned from Token</div>
-                <div>
-                  {/* {Object.entries(data.target.urlPaths).map(
-                    ([key, value], i) => {
-                      if (key === "support" || key === "locate") {
-                        return;
-                      }
-                      return (
-                        <span className="base">
-                          {data.target?.wwwDomain ?? "www.myURL.com"}
-                        </span>
-                      );
-                    },
-                  )} */}
+                <div className="token-build__url">
                   {data.token.token != "$support/" &&
                     data.token.token != "$locate/" && (
                       <span className="base">
@@ -156,14 +176,15 @@ export default function TokenGenerator() {
                 <Input
                   name="tokenGen"
                   type="input"
-                  placeholder={`Make a selection from below`}
+                  height="35px"
+                  placeholder={`Make a selection from below...`}
                   maxLength="200"
                   value={data.token.varTokenValue ?? ""}
                   onChange={handleTokenGenChange}
                 />
                 <CopyButton
                   className="select copy-string"
-                  textToCopy={data.newValue}
+                  textToCopy={data.token.varTokenValue}
                 />
               </div>
               {/* <div className="token-build">

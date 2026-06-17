@@ -164,21 +164,21 @@ export default function LocaleList() {
             <div className="compare-wrap__label">
               Locales in both strings ({data.matchingLocales.length})
             </div>
-            <div classNam="compare-wrap__result">
+            <div className="compare-wrap__result">
               {data.matchingLocales.join(", ")}
             </div>
             <div className="compare-wrap__label">
               Locales in field 1, BUT not in field 2 (
               {data.fieldOneNotTwo?.length})
             </div>
-            <div classNam="compare-wrap__result">
+            <div className="compare-wrap__result">
               {data.fieldOneNotTwo.join(", ")}
             </div>
             <div className="compare-wrap__label">
               Locales in field 2, BUT not in field 1 (
               {data.fieldTwoNotOne?.length})
             </div>
-            <div classNam="compare-wrap__result">
+            <div className="compare-wrap__result">
               {data.fieldTwoNotOne.join(", ")}
             </div>
           </div>

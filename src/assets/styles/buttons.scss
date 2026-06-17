@@ -31,6 +31,9 @@ button {
   &.select {
     // border: solid 1px;
     border: 1px solid #c1c2c7;
+    &:focus {
+      background-color: $button-hov;
+    }
   }
   &.token-select {
     border: 0;

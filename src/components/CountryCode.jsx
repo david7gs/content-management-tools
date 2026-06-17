@@ -18,8 +18,8 @@ export default function CountryCode() {
   OnEnterHook(handleGetCountryCode);
   const isMultiLanguage = data.multiLanguage?.length > 1 ? true : false;
   const isTarget = data.target != undefined ? true : false;
-  console.log(`isMultiLanguage =`, isMultiLanguage);
-  console.log(`isTarget =`, isTarget);
+  // console.log(`isMultiLanguage =`, isMultiLanguage);
+  // console.log(`isTarget =`, isTarget);
 
   function CopyButton({ textToCopy, className }) {
     const [copied, setCopied] = useState(false);

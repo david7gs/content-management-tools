@@ -21,3 +21,23 @@ export const OnEnterHook = (callback) => {
     };
   }, [callback]); // Re-run only if the callback changes
 };
+
+export const useKeyboardActions = (onEnter, onTab) => {
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Enter" && onEnter) {
+        onEnter(event);
+      }
+
+      if (event.key === "Tab" && onTab) {
+        onTab(event);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onEnter, onTab]);
+};

@@ -139,7 +139,7 @@ export default function McToolsContextProvider({ children }) {
       //setData(data);
     } catch (error) {
       // Handle network errors OR thrown HTTP errors
-      console.error("Fetch failed, using default:", error.message);
+      // console.error("Fetch failed, using default:", error.message);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -620,7 +620,6 @@ export default function McToolsContextProvider({ children }) {
 
   function handleGetCountryCodeOnChange(e) {
     const value = e.target.value;
-    console.log(`handleGetCountryCodeOnChange firing and value =`, value);
     setMasterTools((prevState) => {
       return {
         ...prevState,
@@ -637,7 +636,7 @@ export default function McToolsContextProvider({ children }) {
     // TODO - Make this a function, put in helper file, and import
     const exp = new RegExp(/^[a-zA-Z0-9_-]+$/);
     const value = masterTools.countryCode.input;
-    console.log(`handleGetCountryCode and value =`, value);
+    // console.log(`handleGetCountryCode and value =`, value);
     const valid = exp.test(value);
     const isLocale = value?.includes("_");
     const search = isLocale ? `id` : `isoCountryCode`;
@@ -647,11 +646,11 @@ export default function McToolsContextProvider({ children }) {
         locale[search].toLowerCase() ===
         masterTools.countryCode.input?.toLowerCase(),
     );
-    console.log(`1 countryArr =`, countryArr);
+    // console.log(`1 countryArr =`, countryArr);
 
     if (value === undefined) {
       // checks for bad or no input
-      console.log(`value undefined`);
+      // console.log(`value undefined`);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -663,7 +662,7 @@ export default function McToolsContextProvider({ children }) {
         };
       });
     } else if (!valid) {
-      console.log(`value not noncharacter`);
+      // console.log(`value not noncharacter`);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -676,9 +675,9 @@ export default function McToolsContextProvider({ children }) {
       });
     } else {
       // input is good and check for length and result
-      console.log(`value is valid input`);
+      // console.log(`value is valid input`);
       if (value?.length < 2) {
-        console.log(`value short`);
+        // console.log(`value short`);
         setMasterTools((prevState) => {
           return {
             ...prevState,
@@ -690,7 +689,7 @@ export default function McToolsContextProvider({ children }) {
           };
         });
       } else if (value?.length > 6) {
-        console.log(`value too long`);
+        // console.log(`value too long`);
         setMasterTools((prevState) => {
           return {
             ...prevState,
@@ -702,12 +701,12 @@ export default function McToolsContextProvider({ children }) {
           };
         });
       } else {
-        console.log(`input is good`);
+        // console.log(`input is good`);
         if (isLocale) {
-          console.log(`input is a locale`);
+          // console.log(`input is a locale`);
           const index = Locales.indexOf(value.toLowerCase());
           if (index < 0) {
-            console.log(`input is a locale and no match`);
+            // console.log(`input is a locale and no match`);
             setMasterTools((prevState) => {
               return {
                 ...prevState,
@@ -724,8 +723,8 @@ export default function McToolsContextProvider({ children }) {
           } else {
             // #HERE ##########
             const countryCode = CountryCodes[index];
-            console.log(`input is a locale and match found found`);
-            console.log(`I have countryArr[0] =`, countryArr[0]);
+            // console.log(`input is a locale and match found found`);
+            // console.log(`I have countryArr[0] =`, countryArr[0]);
             setMasterTools((prevState) => {
               return {
                 ...prevState,
@@ -741,13 +740,13 @@ export default function McToolsContextProvider({ children }) {
             });
           }
         } else {
-          console.log(`input is good and a country code`);
-          console.log(`my countries list`, Countries);
-          console.log(`value =`, value);
+          // console.log(`input is good and a country code`);
+          // console.log(`my countries list`, Countries);
+          // console.log(`value =`, value);
           const index = Countries.indexOf(value?.toLowerCase());
-          console.log(`index =`, index);
+          // console.log(`index =`, index);
           if (countryArr?.length <= 0) {
-            console.log(`input is a country and no match found`);
+            // console.log(`input is a country and no match found`);
             setMasterTools((prevState) => {
               return {
                 ...prevState,
@@ -762,12 +761,12 @@ export default function McToolsContextProvider({ children }) {
               };
             });
           } else {
-            console.log(`input is a country and match found`);
-            console.log(`countryArr =`, countryArr);
+            // console.log(`input is a country and match found`);
+            // console.log(`countryArr =`, countryArr);
             const locale = LocaleList[index]; // TODO use input not value
             if (countryArr?.length > 1) {
-              console.log(`multilanguage country`);
-              console.log(`countryArr.length =`, countryArr?.length);
+              // console.log(`multilanguage country`);
+              // console.log(`countryArr.length =`, countryArr?.length);
               setMasterTools((prevState) => {
                 return {
                   ...prevState,
@@ -802,7 +801,7 @@ export default function McToolsContextProvider({ children }) {
   }
 
   function handleCountryCodeLocaleSelect(e) {
-    console.log(`handleCountryCodeLocaleSelect firing`);
+    // console.log(`handleCountryCodeLocaleSelect firing`);
     const target = e.target.name;
     const data = masterTools.countryCode.multiLanguage?.find(
       (locale) => locale.id === target,
@@ -1000,7 +999,7 @@ export default function McToolsContextProvider({ children }) {
 
   function handleTokenGeneratorOnChange(e) {
     const value = e.target.value === "" ? undefined : e.target.value;
-    console.log(`handleTokenGeneratorOnChange firing and value =`, value);
+    // console.log(`handleTokenGeneratorOnChange firing and value =`, value);
     setMasterTools((prevState) => {
       return {
         ...prevState,
@@ -1045,11 +1044,11 @@ export default function McToolsContextProvider({ children }) {
         locale[search].toLowerCase() ===
         masterTools.tokenGen.input.toLowerCase(),
     );
-    console.log(`1 countryArr =`, countryArr);
+    // console.log(`1 countryArr =`, countryArr);
 
     if (value === undefined) {
       // checks for bad or no input
-      console.log(`value undefined`);
+      // console.log(`value undefined`);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -1108,9 +1107,9 @@ export default function McToolsContextProvider({ children }) {
           };
         });
       } else {
-        console.log(`input is good`);
+        // console.log(`input is good`);
         if (isLocale) {
-          console.log(`input is a locale`);
+          // console.log(`input is a locale`);
           const index = Locales.indexOf(value.toLowerCase());
           if (index < 0) {
             setMasterTools((prevState) => {
@@ -1128,8 +1127,8 @@ export default function McToolsContextProvider({ children }) {
             });
           } else {
             // #HERE
-            console.log(`isLOCALE and locale found`);
-            console.log(`I have countryArr[0] =`, countryArr[0]);
+            // console.log(`isLOCALE and locale found`);
+            // console.log(`I have countryArr[0] =`, countryArr[0]);
             const countryCode = CountryCodes[index];
             setMasterTools((prevState) => {
               return {
@@ -1145,7 +1144,7 @@ export default function McToolsContextProvider({ children }) {
             });
           }
         } else {
-          console.log(`input is good and a country code`);
+          // console.log(`input is good and a country code`);
           if (countryArr.length <= 0) {
             setMasterTools((prevState) => {
               return {
@@ -1214,7 +1213,7 @@ export default function McToolsContextProvider({ children }) {
     const value = e.target.name;
     const newValue = `$` + value + `/`;
     const key = masterTools.tokenGen.target.urlPaths[value];
-    console.log(`my key value = ${key}`);
+    // console.log(`my key value = ${key}`);
     setMasterTools((prevState) => {
       return {
         ...prevState,
@@ -1227,12 +1226,12 @@ export default function McToolsContextProvider({ children }) {
   }
 
   function handleTokenGenChange(e) {
-    console.log(`handleTokenGenChange firing`);
+    // console.log(`handleTokenGenChange firing`);
     const value = e.target.value;
     const newKeyValue = value.split("/").toSpliced(0, 1).join("/");
-    console.log(e.target);
-    console.log(value);
-    console.log(newKeyValue);
+    // console.log(e.target);
+    // console.log(value);
+    // console.log(newKeyValue);
     setMasterTools((prevState) => {
       const newObj = { ...prevState.tokenGen.token.key, tokenValue: value };
       return {
