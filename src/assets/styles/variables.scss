@@ -1,6 +1,7 @@
 $sm: 480px;
 $md: 768px;
-$lg: 1024px;
+$lg: 992px;
+$xl: 1024px;
 
 // colors
 $button-hov: rgb(192, 192, 179);
@@ -9,11 +10,32 @@ $highlight2: #b22222;
 $highlight3: #0066ff;
 $highlight4: #9c27b0;
 
+// text
+$text: #3c4044;
+
+// background
+$bg: #dddcdb;
+
 // Grays
 $g200: #cbd1d7;
 
+$clLgtGray: #d3d3d3;
+$neutralSoftGray: #e5e7eb;
+$coolAiryUIGray: #f4f5f7;
+
 // Buttons
-$button: #ffffff;
-$hover: #a2adb9;
+$button: #edbf9b;
+$hover: #fd7b41;
 $hoverDrk: #8b96a2;
 $selectDrk: #74808b;
+$border: #3c4044;
+
+$buttonOld: #ffffff;
+$hoverOld: #a2adb9;
+$hoverDrk: #8b96a2;
+$selectDrk: #74808b;
+
+$newGray: #dddcdb;
+$newOrange: #fd7b41;
+$peach: #edbf9b;
+$dark: #3c4044;

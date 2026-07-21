@@ -17,6 +17,20 @@ export default function LocaleList() {
 
   OnEnterHook(handleGetCompareLocales);
 
+  const isDuplicate =
+    compareLocales.fieldOneDuplicate.length > 0 ||
+    compareLocales.fieldTwoDuplicate.length > 0
+      ? true
+      : false;
+
+  const duplicateLocation =
+    compareLocales.fieldOneDuplicate.length > 0 &&
+    compareLocales.fieldTwoDuplicate.length > 0
+      ? "both fields"
+      : compareLocales.fieldOneDuplicate.length > 0
+        ? "the first field"
+        : "the second field";
+
   const scrollTo = useRef(null);
   useEffect(() => {
     if (scrollTo.current) {
@@ -41,9 +55,9 @@ export default function LocaleList() {
 
   return (
     <>
-      <div className="locale-list slide-in">
-        <div className="slide-in__description">
-          <h4>Compare Locale Lists</h4>
+      <section className="locale-list slide-in">
+        <header>
+          <h1>Compare Locale Lists</h1>
           <p>
             Use this tool to compare two locale lists side by side and see
             what's different between them.
@@ -63,127 +77,154 @@ export default function LocaleList() {
               ?
             </button>
           </p>
-        </div>
-        <div className="input-wrap">
-          <div className="input-col">
-            <label htmlFor="firstInput">
-              Field 1 Locales&nbsp;
-              {data.firstInputArr.length > 0 && (
-                <span className="locale-count">
-                  ({compareLocales.firstInputArr.length})
-                </span>
-              )}
-            </label>
-            <Input
-              className="myTester"
-              type="textarea"
-              name="firstInput"
-              id="firstInput"
-              dataType="locale-list"
-              value={data.firstInput}
-              isError={errorFieldOne}
-              errorType={data.errorType}
-              errorLocation={data.errorLocation}
-              onChange={handleCompareLocaleChange}
-              onFocus={handleOnFocusLocaleList}
-              rows="4"
-              cols="50"
-              placeholder="ex: en_AU, en_CA, fr_CA, es_CL, de_DE"
-            />
-            <button
-              className="select"
-              onClick={handleClearLocaleListInput}
-              data-input="firstInput"
-            >
-              Clear input
-            </button>
-            <div className="error-container">
-              {errorFieldOne && `Please enter list of locales to compare`}
+        </header>
+
+        <div className="content-wrap scroll">
+          <div className="input-wrap">
+            <div className="input-col">
+              <label htmlFor="firstInput">
+                Field 1 Locales&nbsp;
+                {data.firstInputArr.length > 0 && (
+                  <span className="locale-count">
+                    ({compareLocales.firstInputArr.length})
+                  </span>
+                )}
+              </label>
+              <Input
+                className="myTester"
+                type="textarea"
+                name="firstInput"
+                id="firstInput"
+                dataType="locale-list"
+                value={data.firstInput}
+                isError={errorFieldOne}
+                errorType={data.errorType}
+                errorLocation={data.errorLocation}
+                onChange={handleCompareLocaleChange}
+                onFocus={handleOnFocusLocaleList}
+                rows="4"
+                cols="50"
+                placeholder="ex: en_AU, en_CA, fr_CA, es_CL, de_DE"
+              />
+              <button
+                className="select"
+                onClick={handleClearLocaleListInput}
+                data-input="firstInput"
+              >
+                Clear input
+              </button>
+              <div className="error-container">
+                {errorFieldOne && `Please enter list of locales to compare`}
+              </div>
+            </div>
+
+            <div className="input-col">
+              <label htmlFor="secondInput">
+                Field 2 Locales&nbsp;
+                {data.secondInputArr?.length > 0 && (
+                  <span className="locale-count">
+                    ({compareLocales.secondInputArr.length})
+                  </span>
+                )}
+              </label>
+              <Input
+                type="textarea"
+                name="secondInput"
+                id="secondInput"
+                dataType="locale-list"
+                value={data.secondInput}
+                isError={errorFieldTwo}
+                errorType={data.errorType}
+                errorLocation={data.errorLocation}
+                onChange={handleCompareLocaleChange}
+                onFocus={handleOnFocusLocaleList}
+                // onClick={handleReset}
+                rows="4"
+                cols="50"
+                placeholder="ex: en_AU, en_CA, fr_CA, es_CL, de_DE"
+              />
+              <button
+                className="select"
+                onClick={handleClearLocaleListInput}
+                data-input="secondInput"
+              >
+                Clear Input
+              </button>
+              <div className="error-container">
+                {errorFieldTwo && `Please enter list of locales to compare`}
+              </div>
             </div>
           </div>
 
-          <div className="input-col">
-            <label htmlFor="secondInput">
-              Field 2 Locales&nbsp;
-              {data.secondInputArr?.length > 0 && (
-                <span className="locale-count">
-                  ({compareLocales.secondInputArr.length})
-                </span>
-              )}
-            </label>
-            <Input
-              type="textarea"
-              name="secondInput"
-              id="secondInput"
-              dataType="locale-list"
-              value={data.secondInput}
-              isError={errorFieldTwo}
-              errorType={data.errorType}
-              errorLocation={data.errorLocation}
-              onChange={handleCompareLocaleChange}
-              onFocus={handleOnFocusLocaleList}
-              // onClick={handleReset}
-              rows="4"
-              cols="50"
-              placeholder="ex: en_AU, en_CA, fr_CA, es_CL, de_DE"
-            />
+          <div className="seperator-button">
             <button
-              className="select"
-              onClick={handleClearLocaleListInput}
-              data-input="secondInput"
+              className="select compare-button"
+              onClick={handleGetCompareLocales}
             >
-              Clear Input
+              Compare
             </button>
-            <div className="error-container">
-              {errorFieldTwo && `Please enter list of locales to compare`}
-            </div>
+            <button
+              className="select reset-button"
+              onClick={handleResetCompareLocales}
+            >
+              Reset Inputs
+            </button>
+            {data?.isComparisonGood && (
+              <span className="down-arrow bounce">
+                <DownArrow />
+              </span>
+            )}
           </div>
-        </div>
-
-        <div className="seperator-button">
-          <button
-            className="select compare-button"
-            onClick={handleGetCompareLocales}
-          >
-            Compare
-          </button>
-          <button
-            className="select reset-button"
-            onClick={handleResetCompareLocales}
-          >
-            Reset Inputs
-          </button>
           {data?.isComparisonGood && (
-            <span className="down-arrow bounce">
-              <DownArrow />
-            </span>
+            <div className="compare-wrap slide-in">
+              <div className="compare-wrap__label">
+                Locales in both strings ({data.matchingLocales.length})
+              </div>
+              <div className="compare-wrap__result">
+                {data.matchingLocales.join(", ")}
+              </div>
+              <div className="compare-wrap__label">
+                Locales in field 1, BUT not in field 2 (
+                {data.fieldOneNotTwo?.length})
+              </div>
+              <div className="compare-wrap__result">
+                {data.fieldOneNotTwo.join(", ")}
+              </div>
+              <div className="compare-wrap__label">
+                Locales in field 2, BUT not in field 1 (
+                {data.fieldTwoNotOne?.length})
+              </div>
+              <div className="compare-wrap__result">
+                {data.fieldTwoNotOne.join(", ")}
+              </div>
+              {isDuplicate && (
+                <div className="compare-wrap__dup">
+                  <h3>
+                    Duplicates were found in {duplicateLocation} and removed for
+                    comparison accuracy.
+                  </h3>
+                  {compareLocales.fieldOneDuplicate.length > 0 && (
+                    <p>
+                      <span className="bold">
+                        First field duplicates removed:
+                      </span>
+                      <span>{compareLocales.fieldOneDuplicate.join(", ")}</span>
+                    </p>
+                  )}
+                  {compareLocales.fieldTwoDuplicate.length > 0 && (
+                    <p>
+                      <span className="bold">
+                        Second field duplicates removed:
+                      </span>
+                      <span>{compareLocales.fieldTwoDuplicate.join(", ")}</span>
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
           )}
         </div>
-        {data?.isComparisonGood && (
-          <div className="compare-wrap slide-in">
-            <div className="compare-wrap__label">
-              Locales in both strings ({data.matchingLocales.length})
-            </div>
-            <div className="compare-wrap__result">
-              {data.matchingLocales.join(", ")}
-            </div>
-            <div className="compare-wrap__label">
-              Locales in field 1, BUT not in field 2 (
-              {data.fieldOneNotTwo?.length})
-            </div>
-            <div className="compare-wrap__result">
-              {data.fieldOneNotTwo.join(", ")}
-            </div>
-            <div className="compare-wrap__label">
-              Locales in field 2, BUT not in field 1 (
-              {data.fieldTwoNotOne?.length})
-            </div>
-            <div className="compare-wrap__result">
-              {data.fieldTwoNotOne.join(", ")}
-            </div>
-          </div>
-        )}
-      </div>
+      </section>
     </>
   );
 }

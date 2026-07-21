@@ -25,11 +25,71 @@ export const Content = [
       "As you paste your data, a counter will appear besides each field label showing how many locales and content indicator flags were detected. When the two counts match, the tool will generate your locale list.",
       "The tool also returns a full reference list showing all locales alongside their content flags, so you can quickly review and confirm the results before using them.",
     ],
-    // example: {
-    //   firstString:
-    //     "en_CA, es_CL, es_MX, fr_CA, pt_BR, en_AU, en_NZ, ar_AE, cs_CZ, en_AE, it_IT",
-    //   secondString: "*•*	*•*	*•*	*•* 	*•*		*•*	*•*		*•*",
-    // },
+    isExample: true,
+    example: {
+      firstString:
+        "en_US, en_AE, ar_AE, en_AU, pt_BR, en_CA, fr_CA, es_CL, zh_CN, es_CO, de_DE, es_ES, fr_FR, en_IN, it_IT, ja_JP, ko_KR, es_MX, en_MY, en_SG",
+      firstStringText: `en_US
+en_AE
+
+ar_AE
+
+en_AU
+
+pt_BR
+
+en_CA
+
+fr_CA
+
+es_CL
+
+zh_CN
+es_CO
+
+de_DE
+
+es_ES
+
+fr_FR
+
+en_IN
+
+it_IT
+
+ja_JP
+
+ko_KR
+
+es_MX
+
+en_MY
+
+en_SG
+`,
+      secondString: `/n/n/n**•**/n/n/n**•**/n/n**•**/n/n/n/n/n**•**/n/n**•**/n/n**•**/n**•**/n/n/n`,
+      secondStringText: `
+
+
+
+**•**
+
+
+**•**
+
+**•**
+
+
+
+
+**•**
+
+**•**
+**•**
+**•**
+
+`,
+    },
   },
   {
     type: "COUNTRY_CODE",

@@ -11,7 +11,7 @@
     background-color: rgb(0 0 0 / 0%);
   }
   100% {
-    background-color: rgb(0 0 0 / 60%);
+    background-color: color-mix(in srgb, $dark 80%, transparent);
   }
 }
 

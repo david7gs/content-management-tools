@@ -21,50 +21,17 @@ export default function TokenGenerator() {
     // handleSelectTokenQueryType,
   } = useContext(McToolsContext);
 
-  function enterActions(e) {
-    if (e?.target.name === "en_CA") {
-      return "ggg";
-    }
-    if (e?.target.name === "fr_CA") {
-      return "FFF";
-    }
-  }
-  // usernameInput: (event) => {
-  //   console.log(
-  //     "Enter pressed in Username field. Value:",
-  //     event.target.value,
-  //   );
-  // },
-  // submitBtn: (event) => {
-  //   console.log("Enter pressed on the Submit Button!");
-  // },
-  // };
-  console.log(`my enterActions =`, enterActions());
   OnEnterHook(getLocaleOrCountryType);
-
-  // useKeyboardActions(
-  //   (event) => {
-  //     console.log("Enter pressed! event.target =", event.target);
-  //   },
-  //   (event) => {
-  //     event.preventDefault(); // Prevents focus from moving if needed
-  //     console.log("Tab pressed! event.target =", event.target);
-  //   },
-  // );
 
   const data = { ...tokenGen };
   const geo = { ...geoInfo };
   const isMultiLanguage = data.multiLanguage?.length > 1 ? true : false;
   const isTarget = data.target != undefined ? true : false;
-  // console.log(`isMultiLanguage =`, isMultiLanguage);
-  // console.log(`isTarget =`, isTarget);
 
   function CopyButton({ textToCopy, className }) {
     const [copied, setCopied] = useState(false);
 
     const handleCopy = async () => {
-      // console.log(`handleCopy firing`)
-      console.log(`handleCopy firing and textToCopy =`, textToCopy);
       if (!textToCopy) return;
       try {
         await navigator.clipboard.writeText(textToCopy);
@@ -95,9 +62,11 @@ export default function TokenGenerator() {
             : `There is an error in your input`;
 
   return (
-    <div className="locale-list token-gen slide-in">
-      <div className="description">
-        <h3>Token Generator</h3>
+    <section className="token-gen slide-in">
+      <header>
+        <h1>Token Generator</h1>
+      </header>
+      <div className="content-wrap scroll">
         <div className="input-wrap">
           <div className="input-col flex-row">
             <label htmlFor="tokenGeneratorInput">
@@ -113,6 +82,7 @@ export default function TokenGenerator() {
               onChange={handleTokenGeneratorOnChange}
               onFocus={handleTokenGeneratorOnFocus}
               value={tokenGen.input ?? ""}
+              isError={data.isError}
             >
               <button
                 className="select cc-button"
@@ -121,10 +91,10 @@ export default function TokenGenerator() {
                 Generate token
               </button>
             </Input>
+            <div className="error-container error">
+              {data.isError && tokenErrorMessage}
+            </div>
           </div>
-        </div>
-        <div className="error-container error">
-          {data.isError && tokenErrorMessage}
         </div>
         {isMultiLanguage && (
           <div className="slide-in">
@@ -177,7 +147,7 @@ export default function TokenGenerator() {
                   name="tokenGen"
                   type="input"
                   height="35px"
-                  placeholder={`Make a selection from below...`}
+                  placeholder={`Select a token below...`}
                   maxLength="200"
                   value={data.token.varTokenValue ?? ""}
                   onChange={handleTokenGenChange}
@@ -233,6 +203,6 @@ export default function TokenGenerator() {
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }

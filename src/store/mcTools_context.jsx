@@ -9,6 +9,7 @@ import {
 // import TokenGenerator from "../components/TokenGenerator.jsx";
 
 export const McToolsContext = createContext({
+  view: "",
   compareLocales: {},
   localeList: {},
   countryCode: {},
@@ -17,6 +18,7 @@ export const McToolsContext = createContext({
   isToolTip: false,
   errorType: "",
   geoInfo: {},
+  handleNavClick: () => {},
   handleToolTipClick: () => {},
   handleToolTipClose: () => {},
   handleCompareLocaleChange: () => {},
@@ -53,6 +55,8 @@ export default function McToolsContextProvider({ children }) {
       secondInput: "",
       secondInputArr: [],
       matchingLocales: [],
+      fieldOneDuplicate: [],
+      fieldTwoDuplicate: [],
       fieldOneNotTwo: [],
       fieldTwoNotOne: [],
       isComparisonGood: false,
@@ -105,6 +109,7 @@ export default function McToolsContextProvider({ children }) {
       multiLanguage: [],
       target: undefined,
       token: {},
+      input: "",
       // TODO : clean up isError and isValid
       isError: false,
       errorType: undefined,
@@ -113,6 +118,7 @@ export default function McToolsContextProvider({ children }) {
       // errorLocation: undefined,
       showResult: undefined,
     },
+    view: "home",
     isLoading: true,
     error: false,
     isToolTip: false,
@@ -182,6 +188,15 @@ export default function McToolsContextProvider({ children }) {
     fetchData();
   }, []);
 
+  function handleNavClick(view) {
+    setMasterTools((prevState) => {
+      return {
+        ...prevState,
+        view: view,
+      };
+    });
+  }
+
   function handleToolTipClick(type) {
     setMasterTools((prevState) => {
       return {
@@ -209,9 +224,7 @@ export default function McToolsContextProvider({ children }) {
   function handleCompareLocaleChange(e) {
     const arrayName = e.target.name;
     const value = e.target.value;
-    // console.log(`handleCompareLocaleChange firing and value =`, value);
     const newArray = value === "" ? [] : value.replace(/\s+/g, "").split(",");
-    // console.log(`handleCompareLocaleChange firing and newArray =`, newArray);
     setMasterTools((prevState) => {
       return {
         ...prevState,
@@ -232,7 +245,6 @@ export default function McToolsContextProvider({ children }) {
     const AlsoInBoth = [];
     const inTwoNotOne = [];
     if (!firstInput.length && !secondInput.length) {
-      // console.log(`no first or second input.length`);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -246,7 +258,6 @@ export default function McToolsContextProvider({ children }) {
         };
       });
     } else if (!firstInput.length) {
-      // console.log(`no first input.length`);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -260,7 +271,6 @@ export default function McToolsContextProvider({ children }) {
         };
       });
     } else if (!secondInput.length) {
-      // console.log(`no second input.length`);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -274,18 +284,49 @@ export default function McToolsContextProvider({ children }) {
         };
       });
     } else {
-      firstInput.map((locale, i) => {
-        if (secondInput.includes(locale)) {
-          localesInBoth.push(locale);
+      // TODO - check for and handle duplicates
+      const lowerFirstInput = firstInput.map((str) => str.toLowerCase());
+      const lowerSecondInput = secondInput.map((str) => str.toLowerCase());
+      const processArray = (arr) => {
+        const seen = new Set();
+        const duplicates = new Set();
+        // Iterate forward to find and remove subsequent (last) duplicates
+        for (let i = 0; i < arr.length; i++) {
+          const item = arr[i];
+
+          if (seen.has(item)) {
+            duplicates.add(item); // Track the duplicate value
+            arr.splice(i, 1); // Remove it from the original array
+            i--; // Decrement index to adjust for the removed element
+          } else {
+            seen.add(item); // Mark the first occurrence as seen
+          }
+        }
+        return {
+          unique: Array.from(seen),
+          duplicates: Array.from(duplicates),
+        };
+      };
+      const firstInputResult = processArray(lowerFirstInput);
+      const secondInputResult = processArray(lowerSecondInput);
+      const formatLocale = (str) =>
+        str
+          .split("_")
+          .map((item, i) => (i === item.length - 1 ? item.toUpperCase() : item))
+          .join("_");
+
+      firstInputResult.unique.forEach((locale, i) => {
+        if (secondInputResult.unique.includes(locale)) {
+          localesInBoth.push(formatLocale(locale));
         } else {
-          inOneNotTwo.push(locale);
+          inOneNotTwo.push(formatLocale(locale));
         }
       });
-      secondInput.map((locale, i) => {
-        if (firstInput.includes(locale)) {
-          AlsoInBoth.push(locale);
+      secondInputResult.unique.forEach((locale, i) => {
+        if (firstInputResult.unique.includes(locale)) {
+          AlsoInBoth.push(formatLocale(locale));
         } else {
-          inTwoNotOne.push(locale);
+          inTwoNotOne.push(formatLocale(locale));
         }
       });
       setMasterTools((prevState) => {
@@ -293,9 +334,23 @@ export default function McToolsContextProvider({ children }) {
           ...prevState,
           compareLocales: {
             ...prevState.compareLocales,
+            firstInput: firstInputResult.unique
+              .map((str) => formatLocale(str))
+              .join(", "),
+            firstInputArr: firstInputResult.unique,
+            secondInput: secondInputResult.unique
+              .map((str) => formatLocale(str))
+              .join(", "),
+            secondInputArr: secondInputResult.unique,
             isComparisonGood: true,
             matchingLocales: localesInBoth,
+            fieldOneDuplicate: firstInputResult.duplicates.map((str) =>
+              formatLocale(str),
+            ),
             fieldOneNotTwo: inOneNotTwo,
+            fieldTwoDuplicate: secondInputResult.duplicates.map((str) =>
+              formatLocale(str),
+            ),
             fieldTwoNotOne: inTwoNotOne,
           },
         };
@@ -314,6 +369,8 @@ export default function McToolsContextProvider({ children }) {
           secondInput: "",
           secondInputArr: [],
           matchingLocales: [],
+          fieldOneDuplicate: [],
+          fieldTwoDuplicate: [],
           fieldOneNotTwo: [],
           fieldTwoNotOne: [],
           isComparisonGood: false,
@@ -324,10 +381,6 @@ export default function McToolsContextProvider({ children }) {
       };
     });
   }
-
-  // ######
-  // ##  LOCALE GENERATOR
-  // ######
 
   function handleClearLocaleListInput(e) {
     const target = e.target.dataset.input;
@@ -386,6 +439,10 @@ export default function McToolsContextProvider({ children }) {
     }
   }
 
+  // ######
+  // ##  LOCALE GENERATOR
+  // ######
+
   // Get Content change Locale List
   function handleLocaleGeneratorOnPaste(e) {
     e.preventDefault();
@@ -415,7 +472,7 @@ export default function McToolsContextProvider({ children }) {
         return acc;
       }, []);
       if (falseIndexes?.length === newArr?.length) {
-        // console.log(`in noValidLocales`);
+        // noValidLocales
         setMasterTools((prevState) => {
           return {
             ...prevState,
@@ -428,7 +485,6 @@ export default function McToolsContextProvider({ children }) {
           };
         });
       } else {
-        // console.log(`looking good?`);
         setMasterTools((prevState) => {
           return {
             ...prevState,
@@ -465,11 +521,9 @@ export default function McToolsContextProvider({ children }) {
   }
 
   function handleGetLocaleGeneratorList() {
-    // console.log(`handleGetLocaleGeneratorList firing`);
     const len1 = masterTools.localeList.firstInputArr.length;
     const len2 = masterTools.localeList.secondInputArr.length;
     if (len1 === 0 || len2 === 0) {
-      // console.log(`generateList error -  not equal`);
       const errorLocation =
         len1 === 0 && len2 === 0
           ? "BOTH"
@@ -488,7 +542,6 @@ export default function McToolsContextProvider({ children }) {
         };
       });
     } else if (len1 === len2) {
-      // console.log(`localeList array lengths ==`);
       const indexArr = [];
       masterTools.localeList.secondInputArr.map((indicator, i) => {
         if (indicator === "") {
@@ -501,7 +554,6 @@ export default function McToolsContextProvider({ children }) {
         },
       );
       setMasterTools((prevState) => {
-        // console.log(`localeList GTG & localeArray =`, localeArray);
         return {
           ...prevState,
           localeList: {
@@ -515,7 +567,6 @@ export default function McToolsContextProvider({ children }) {
         };
       });
     } else {
-      // console.log(`error - numbers don't match`);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -536,10 +587,6 @@ export default function McToolsContextProvider({ children }) {
     const value = e.target.value;
     const target = e.target.dataset.type;
     const newValue = value === "" ? [] : value.split(", ");
-    // console.log(`handleLocaleGeneratorOnChange firing`);
-    // console.log(`value = ${value}`);
-    // console.log(`target = ${target}`);
-    // console.log(`newValue = ${newValue}`);
     setMasterTools((prevState) => {
       return {
         ...prevState,
@@ -636,21 +683,17 @@ export default function McToolsContextProvider({ children }) {
     // TODO - Make this a function, put in helper file, and import
     const exp = new RegExp(/^[a-zA-Z0-9_-]+$/);
     const value = masterTools.countryCode.input;
-    // console.log(`handleGetCountryCode and value =`, value);
     const valid = exp.test(value);
     const isLocale = value?.includes("_");
     const search = isLocale ? `id` : `isoCountryCode`;
-
+    const input =
+      value === "la" || value === "lae" ? "419" : value.toLowerCase();
     const countryArr = Object.values(masterTools.geoInfo).filter(
-      (locale) =>
-        locale[search].toLowerCase() ===
-        masterTools.countryCode.input?.toLowerCase(),
+      (locale) => locale[search].toLowerCase() === input.toLowerCase(),
     );
-    // console.log(`1 countryArr =`, countryArr);
 
     if (value === undefined) {
       // checks for bad or no input
-      // console.log(`value undefined`);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -662,7 +705,6 @@ export default function McToolsContextProvider({ children }) {
         };
       });
     } else if (!valid) {
-      // console.log(`value not noncharacter`);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -675,9 +717,7 @@ export default function McToolsContextProvider({ children }) {
       });
     } else {
       // input is good and check for length and result
-      // console.log(`value is valid input`);
       if (value?.length < 2) {
-        // console.log(`value short`);
         setMasterTools((prevState) => {
           return {
             ...prevState,
@@ -689,7 +729,6 @@ export default function McToolsContextProvider({ children }) {
           };
         });
       } else if (value?.length > 6) {
-        // console.log(`value too long`);
         setMasterTools((prevState) => {
           return {
             ...prevState,
@@ -701,12 +740,12 @@ export default function McToolsContextProvider({ children }) {
           };
         });
       } else {
-        // console.log(`input is good`);
+        // input is good
         if (isLocale) {
-          // console.log(`input is a locale`);
+          // input is a locale
           const index = Locales.indexOf(value.toLowerCase());
           if (index < 0) {
-            // console.log(`input is a locale and no match`);
+            // input is a locale and no match
             setMasterTools((prevState) => {
               return {
                 ...prevState,
@@ -723,8 +762,6 @@ export default function McToolsContextProvider({ children }) {
           } else {
             // #HERE ##########
             const countryCode = CountryCodes[index];
-            // console.log(`input is a locale and match found found`);
-            // console.log(`I have countryArr[0] =`, countryArr[0]);
             setMasterTools((prevState) => {
               return {
                 ...prevState,
@@ -740,19 +777,15 @@ export default function McToolsContextProvider({ children }) {
             });
           }
         } else {
-          // console.log(`input is good and a country code`);
-          // console.log(`my countries list`, Countries);
-          // console.log(`value =`, value);
           const index = Countries.indexOf(value?.toLowerCase());
-          // console.log(`index =`, index);
           if (countryArr?.length <= 0) {
-            // console.log(`input is a country and no match found`);
             setMasterTools((prevState) => {
               return {
                 ...prevState,
                 countryCode: {
                   ...prevState.countryCode,
                   // isError: true, TODO move to using isError?
+                  token: {},
                   isValid: true,
                   resultType: "COUNTRYNOTFOUND",
                   showResult: true,
@@ -761,12 +794,8 @@ export default function McToolsContextProvider({ children }) {
               };
             });
           } else {
-            // console.log(`input is a country and match found`);
-            // console.log(`countryArr =`, countryArr);
             const locale = LocaleList[index]; // TODO use input not value
             if (countryArr?.length > 1) {
-              // console.log(`multilanguage country`);
-              // console.log(`countryArr.length =`, countryArr?.length);
               setMasterTools((prevState) => {
                 return {
                   ...prevState,
@@ -801,7 +830,6 @@ export default function McToolsContextProvider({ children }) {
   }
 
   function handleCountryCodeLocaleSelect(e) {
-    // console.log(`handleCountryCodeLocaleSelect firing`);
     const target = e.target.name;
     const data = masterTools.countryCode.multiLanguage?.find(
       (locale) => locale.id === target,
@@ -822,7 +850,6 @@ export default function McToolsContextProvider({ children }) {
   }
 
   function handleGetCountryCodeOnFocus() {
-    // console.log(`handleGetCountryCodeOnFocus firing`);
     setMasterTools((prevState) => {
       return {
         ...prevState,
@@ -861,7 +888,6 @@ export default function McToolsContextProvider({ children }) {
         .replace(/,\s*$/, "")
         .split(",");
       const trimmedArr = value === "" ? [] : newArr.map((item) => item.trim());
-      // console.log(`trimmedArr =`, trimmedArr);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -949,9 +975,7 @@ export default function McToolsContextProvider({ children }) {
   }
 
   function handleGetUrlGeneratorOnFocus(e) {
-    // console.log(`handleGetCountryCodeOnFocus firing`);
     const location = e.target.dataset.type;
-    // console.log(`location clicked = ${location}`);
     setMasterTools((prevState) => {
       const prevLocation = prevState.urlGen.errorLocation;
       const errorLocation =
@@ -999,7 +1023,6 @@ export default function McToolsContextProvider({ children }) {
 
   function handleTokenGeneratorOnChange(e) {
     const value = e.target.value === "" ? undefined : e.target.value;
-    // console.log(`handleTokenGeneratorOnChange firing and value =`, value);
     setMasterTools((prevState) => {
       return {
         ...prevState,
@@ -1018,6 +1041,7 @@ export default function McToolsContextProvider({ children }) {
         tokenGen: {
           ...prevState.tokenGen,
           // value: undefined,
+          token: {},
           multiLanguage: [],
           errorType: undefined,
           isValid: undefined,
@@ -1031,24 +1055,19 @@ export default function McToolsContextProvider({ children }) {
 
   function getLocaleOrCountryType() {
     const value = masterTools.tokenGen.input;
-    console.log(`getLocaleOrCountryType firing and input =`, value);
-
     // TODO - Make this a function, put in helper file, and import
     const exp = new RegExp(/^[a-zA-Z0-9_-]+$/);
     const valid = exp.test(value);
     const isLocale = value?.includes("_");
     const search = isLocale ? `id` : `isoCountryCode`;
-
+    const input =
+      value === "la" || value === "lae" ? "419" : value.toLowerCase();
     const countryArr = Object.values(masterTools.geoInfo).filter(
-      (locale) =>
-        locale[search].toLowerCase() ===
-        masterTools.tokenGen.input.toLowerCase(),
+      (locale) => locale[search].toLowerCase() === input.toLowerCase(),
     );
-    // console.log(`1 countryArr =`, countryArr);
 
     if (value === undefined) {
       // checks for bad or no input
-      // console.log(`value undefined`);
       setMasterTools((prevState) => {
         return {
           ...prevState,
@@ -1107,9 +1126,8 @@ export default function McToolsContextProvider({ children }) {
           };
         });
       } else {
-        // console.log(`input is good`);
+        // input is good
         if (isLocale) {
-          // console.log(`input is a locale`);
           const index = Locales.indexOf(value.toLowerCase());
           if (index < 0) {
             setMasterTools((prevState) => {
@@ -1127,8 +1145,6 @@ export default function McToolsContextProvider({ children }) {
             });
           } else {
             // #HERE
-            // console.log(`isLOCALE and locale found`);
-            // console.log(`I have countryArr[0] =`, countryArr[0]);
             const countryCode = CountryCodes[index];
             setMasterTools((prevState) => {
               return {
@@ -1138,19 +1154,19 @@ export default function McToolsContextProvider({ children }) {
                   target: countryArr[0],
                   isValid: true,
                   showResult: true,
-                  resultType: "LOCALENOTFOUND",
+                  // resultType: "LOCALENOTFOUND",
                 },
               };
             });
           }
         } else {
-          // console.log(`input is good and a country code`);
           if (countryArr.length <= 0) {
             setMasterTools((prevState) => {
               return {
                 ...prevState,
                 tokenGen: {
                   ...prevState.tokenGen,
+                  token: {},
                   isError: true,
                   errorLocation: undefined,
                   errorType: "COUNTRYNOTFOUND",
@@ -1213,7 +1229,6 @@ export default function McToolsContextProvider({ children }) {
     const value = e.target.name;
     const newValue = `$` + value + `/`;
     const key = masterTools.tokenGen.target.urlPaths[value];
-    // console.log(`my key value = ${key}`);
     setMasterTools((prevState) => {
       return {
         ...prevState,
@@ -1226,12 +1241,8 @@ export default function McToolsContextProvider({ children }) {
   }
 
   function handleTokenGenChange(e) {
-    // console.log(`handleTokenGenChange firing`);
     const value = e.target.value;
     const newKeyValue = value.split("/").toSpliced(0, 1).join("/");
-    // console.log(e.target);
-    // console.log(value);
-    // console.log(newKeyValue);
     setMasterTools((prevState) => {
       const newObj = { ...prevState.tokenGen.token.key, tokenValue: value };
       return {
@@ -1249,6 +1260,7 @@ export default function McToolsContextProvider({ children }) {
   }
 
   const ctxValue = {
+    view: masterTools.view,
     compareLocales: masterTools.compareLocales,
     localeList: masterTools.localeList,
     countryCode: masterTools.countryCode,
@@ -1258,6 +1270,7 @@ export default function McToolsContextProvider({ children }) {
     isToolTip: masterTools.isToolTip,
     errorType: masterTools.errorType,
     geoInfo: masterTools.geoInfo,
+    handleNavClick: handleNavClick,
     handleToolTipClick: handleToolTipClick,
     handleToolTipClose: handleToolTipClose,
     handleLocaleGeneratorOnPaste: handleLocaleGeneratorOnPaste,

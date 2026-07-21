@@ -1,11 +1,13 @@
 import { useState, useContext } from "react";
 import { McToolsContext } from "./store/mcTools_context.jsx";
-import LocaleGenerator from "./components/LocaleGenerator";
-import LocaleList from "./components/LocaleList";
-import UrlGenerator from "./components/UrlGenerator";
-import CountryCode from "./components/CountryCode";
 import Modal from "./components/Modal";
-import TokenGenerator from "./components/TokenGenerator.jsx";
+import Navigation from "./components/navigation/Navigation.jsx";
+import Viewer from "./components/viewer/Viewer.jsx";
+// import LocaleGenerator from "./components/LocaleGenerator";
+// import LocaleList from "./components/LocaleList";
+// import UrlGenerator from "./components/UrlGenerator";
+// import CountryCode from "./components/CountryCode";
+// import TokenGenerator from "./components/TokenGenerator.jsx";
 
 export default function App() {
   const { isToolTip, toolTip, handleToolTipClose } = useContext(McToolsContext);
@@ -19,7 +21,14 @@ export default function App() {
   return (
     <>
       {isToolTip && <Modal />}
-      <div className="App">
+      <div className="app-wrap">
+        <div className="content">
+          <Navigation />
+          <Viewer />
+        </div>
+      </div>
+
+      {/* <div className="App">
         <div className="page-wrap">
           <h1>Content Management Resources</h1>
           <h4>
@@ -87,7 +96,7 @@ export default function App() {
           {view === "urlGenerator" && <UrlGenerator />}
           {view === "tokenGenerator" && <TokenGenerator />}
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

@@ -65,7 +65,7 @@ export default function LocaleGenerator() {
         <div className="compare-wrap__locales">
           {data.localesWithContentArr?.join(", ")}
         </div>
-        <ul>
+        <ul className="list-gen__list">
           Input map - visualy compare results with matrix
           {data.firstInputArr.map((locale, i) => {
             return (
@@ -101,9 +101,9 @@ export default function LocaleGenerator() {
   const isDisabled = data.firstInputArr?.length === 0 ? true : false;
   return (
     <>
-      <div className="locale-list slide-in">
-        <div className="description">
-          <h4>Locale List Generator</h4>
+      <section className="locale-generator slide-in">
+        <header className="description">
+          <h1>Locale List Generator</h1>
           <p>
             Quickly generate a list of locales for a given content update or
             variation.
@@ -119,119 +119,118 @@ export default function LocaleGenerator() {
             Paste a list of locales from your source (such as a content matrix)
             into the first field.
           </p>
+        </header>
+        <div className="content-wrap scroll">
+          <div className="input-wrap">
+            <div className="input-col">
+              <label htmlFor="firstInput">
+                Locales&nbsp;
+                {data?.firstInputArr?.length != 0 && (
+                  <span className="locale-count">
+                    ({data.firstInputArr.length})
+                  </span>
+                )}
+              </label>
+              <Input
+                type="textarea"
+                name="firstInput"
+                id="firstInput"
+                value={data.firstInputArr.join(", ")}
+                dataType="firstInput"
+                onChange={handleLocaleGeneratorOnChange}
+                handlePaste={handleLocaleGeneratorOnPaste}
+                onFocus={handleLocaleGeneratorOnFocus}
+                isError={LocaleError}
+                placeholder="ex: en_AU, en_CA, fr_CA, es_CL, de_DE"
+                rows="4"
+                cols="50"
+              />
+              <div className="error-container">
+                {LocaleError
+                  ? data.errorType === "noValidLocales"
+                    ? `Valid locales are required to retrieve data. Please enter valid locales. ex: en_CA, es_MX`
+                    : `Unable to generate locale list, Please enter required data.`
+                  : null}
+              </div>
+            </div>
+            <div className="input-col">
+              <div className="description">
+                <p>
+                  In the second field paste data copied from matrix from the
+                  appropriate column indicating if the locale is in/out of
+                  scope. (usually column of cells represented by dots)
+                </p>
+              </div>
+              <label htmlFor="secondInput">
+                Indicator cells&nbsp;
+                {data.secondInputArr.length != 0 && (
+                  <span className="locale-count">
+                    ({data.secondInputArr.length})&nbsp;(should match number of
+                    locales)
+                  </span>
+                )}
+              </label>
+              <Input
+                disable={isDisabled}
+                type="textarea"
+                id="secondInput"
+                name="secondInput"
+                dataType="secondInput"
+                value={data.secondInputArr.join(", ")}
+                isError={urlError}
+                onChange={handleLocaleGeneratorOnChange}
+                handlePaste={handleLocaleGeneratorOnPaste}
+                onFocus={handleLocaleGeneratorOnFocus}
+                placeholder="ex: usually cells copied from a spreadsheet with something indicating yes/no"
+                rows="4"
+                cols="50"
+              />
+              <div className="error-container">
+                {urlError &&
+                  `Unable to generate locale list, Please enter required data.`}
+              </div>
+              <div className="seperator-button">
+                <button
+                  className="select compare-button"
+                  onClick={handleGetLocaleGeneratorList}
+                >
+                  Generate list of locales in scope
+                </button>
+                <button
+                  className="select reset-button"
+                  onClick={handleResetLocaleGeneratorListInput}
+                >
+                  Reset input fields
+                </button>
+                {data?.isLocaleListGenerate && (
+                  <span className="down-arrow bounce">
+                    <DownArrow />
+                  </span>
+                )}
+              </div>
+            </div>
+            {data.isError && data.errorType === "localeListInputNotEqual" && (
+              <div className="error">
+                The number of locales does not match the number of indicator
+                cells. Unable to generate locale list. This could be caused by
+                hidden data from the document the data comes from. Please see
+                this tool tip for more information.
+                <button
+                  className="tool-tip"
+                  title="See examples of possible reasons this tool may not be working"
+                  onClick={() =>
+                    handleToolTipClick("LOCALE_LIST_GENERATOR_HELP")
+                  }
+                >
+                  ?
+                </button>
+              </div>
+            )}
+          </div>
+
+          {data.isLocaleListGenerate && <div>{results}</div>}
         </div>
-        <div className="input-wrap">
-          <div className="input-col">
-            <label htmlFor="firstInput">
-              Locales&nbsp;
-              {data?.firstInputArr?.length != 0 && (
-                <span className="locale-count">
-                  ({data.firstInputArr.length})
-                </span>
-              )}
-            </label>
-            <Input
-              type="textarea"
-              name="firstInput"
-              id="firstInput"
-              value={data.firstInputArr.join(", ")}
-              dataType="firstInput"
-              onChange={handleLocaleGeneratorOnChange}
-              handlePaste={handleLocaleGeneratorOnPaste}
-              onFocus={handleLocaleGeneratorOnFocus}
-              isError={LocaleError}
-              placeholder="ex: en_AU, en_CA, fr_CA, es_CL, de_DE"
-              rows="4"
-              cols="50"
-            />
-            <div className="error-container">
-              {LocaleError
-                ? data.errorType === "noValidLocales"
-                  ? `Valid locales are required to retrieve data. Please enter valid locales. ex: en_CA, es_MX`
-                  : `Unable to generate locale list, Please enter required data.`
-                : null}
-            </div>
-          </div>
-          <div className="input-col">
-            <div className="description">
-              <p>
-                In the second field paste data copied from matrix from the
-                appropriate column indicating if the locale is in/out of scope.
-                (usually column of cells represented by dots)
-              </p>
-            </div>
-            <label htmlFor="secondInput">
-              Indicator cells&nbsp;
-              {data.secondInputArr.length != 0 && (
-                <span className="locale-count">
-                  ({data.secondInputArr.length})&nbsp;(should match number of
-                  locales)
-                </span>
-              )}
-            </label>
-            <Input
-              disable={isDisabled}
-              type="textarea"
-              id="secondInput"
-              name="secondInput"
-              dataType="secondInput"
-              value={data.secondInputArr.join(", ")}
-              isError={urlError}
-              onChange={handleLocaleGeneratorOnChange}
-              handlePaste={handleLocaleGeneratorOnPaste}
-              onFocus={handleLocaleGeneratorOnFocus}
-              placeholder="ex: usually cells copied from a spreadsheet with something indicating yes/no"
-              rows="4"
-              cols="50"
-            />
-            <div className="error-container">
-              {urlError &&
-                `Unable to generate locale list, Please enter required data.`}
-            </div>
-            <div className="seperator-button">
-              <button
-                className="select compare-button"
-                onClick={handleGetLocaleGeneratorList}
-              >
-                Generate list of locales in scope
-              </button>
-              <button
-                className="select reset-button"
-                onClick={handleResetLocaleGeneratorListInput}
-              >
-                Reset input fields
-              </button>
-              {data?.isLocaleListGenerate && (
-                <span className="down-arrow bounce">
-                  <DownArrow />
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-        {/* <button
-          className="compare-button"
-          onClick={handleGetLocaleGeneratorList}
-        >
-          Generate list of locales in scope
-        </button> */}
-        {data.isError && data.errorType === "localeListInputNotEqual" && (
-          <div className="error">
-            The number of locales does not match the number of indicator cells.
-            Unable to generate locale list. This could be caused by hidden data
-            from the document the data comes from. Please see this tool tip for
-            more information.
-            <button
-              className="tool-tip"
-              title="See examples of possible reasons this tool may not be working"
-              onClick={() => handleToolTipClick("LOCALE_LIST_GENERATOR_HELP")}
-            >
-              ?
-            </button>
-          </div>
-        )}
-        {data.isLocaleListGenerate && <div>{results}</div>}
-      </div>
+      </section>
     </>
   );
 }

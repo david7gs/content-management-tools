@@ -21,6 +21,10 @@ button {
 // List
 ol,
 ul {
+  list-style-type: none;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  padding-inline-start: 0;
   li {
     // margin-bottom: 6px;
     padding: 0;

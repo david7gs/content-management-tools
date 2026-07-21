@@ -2,16 +2,17 @@ button {
   border-radius: 6px;
   // border: solid 1px;
   padding: 5px;
-  background-color: #fff;
+  background-color: $button;
   font-size: 0.85rem;
   cursor: pointer;
   &:hover {
     // background-color: rgba(138, 154, 91, 0.5);
-    background-color: $button-hov;
+    background-color: $hover;
   }
   &.active {
-    color: #fff;
-    background-color: #424242;
+    // color: #fff;
+    //background-color: #424242;
+    background-color: $hover;
   }
   &.full-width {
     width: 100%;
@@ -30,9 +31,10 @@ button {
   }
   &.select {
     // border: solid 1px;
-    border: 1px solid #c1c2c7;
-    &:focus {
-      background-color: $button-hov;
+    border: 1px solid $dark;
+    // border: 1px solid #c1c2c7;
+    &:hover {
+      background-color: $hover;
     }
   }
   &.token-select {
@@ -46,7 +48,7 @@ button {
     min-width: 125px;
     text-align: left;
     &.active {
-      background-color: $button-hov;
+      background-color: $hover;
       color: #000;
       border-right: solid 2px gray;
     }
@@ -58,4 +60,60 @@ button {
       color: #ffffff;
     }
   }
+}
+
+// ######
+// ### MOBILE NAV
+// ######
+.nav-mobile {
+  padding: 2.5rem 0 0 1rem;
+  @media (min-width: $md) {
+    display: none;
+  }
+  button {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    &.open .bar:nth-child(1) {
+      transform: translateY(10px) rotate(45deg);
+    }
+
+    &.open .bar:nth-child(2) {
+      opacity: 0;
+    }
+
+    &.open .bar:nth-child(3) {
+      transform: translateY(-10px) rotate(-45deg);
+    }
+  }
+}
+.nav-wrap__mobile {
+  button {
+    background-color: initial;
+    border-radius: 6px;
+    padding: 6px 7px;
+    text-align: left;
+    color: $hover;
+    font-weight: 600;
+    &:hover,
+    &:active {
+      //color: color-mix(in srgb, $hover, white 30%);
+      background-color: color-mix(in srgb, $bg, white 90%);
+    }
+  }
+}
+
+/* Individual bars styling */
+.bar {
+  width: 100%;
+  height: 4px;
+  background-color: #333;
+  border-radius: 2px;
+  transition: all 0.3s ease-in-out;
 }
