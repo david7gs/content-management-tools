@@ -142,4 +142,5 @@ vite.config.ts.timestamp-*
 
 # Backup folder
 backups/
+dist_bkups/
 .env/
