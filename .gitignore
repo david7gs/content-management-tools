@@ -144,3 +144,4 @@ vite.config.ts.timestamp-*
 backups/
 dist_bkups/
 .env/
+notes/
